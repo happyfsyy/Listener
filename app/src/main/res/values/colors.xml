@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#cccccc</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="bottomTabBg">#d8d8d8</color>
+    <color name="backgroundColor">#e6e6e6</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="textColor">#333333</color>
+    <color name="grayTextColor">#888888</color>
+    <color name="tagColor">#80a9d3</color>
+    <color name="scrollbarColor">#6699cc</color>
 </resources>
