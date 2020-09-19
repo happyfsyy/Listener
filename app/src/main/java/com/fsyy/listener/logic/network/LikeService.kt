@@ -11,4 +11,8 @@ object LikeService {
         whereContainedIn("post",posts)
         whereEqualTo("user",AVUser.currentUser())
     }
+    fun genCommentLikeQuery(comments:List<AVObject>)=AVQuery<AVObject>("Like").apply {
+        whereContainedIn("comment",comments)
+        whereEqualTo("user",AVUser.currentUser())
+    }
 }

@@ -11,6 +11,6 @@ class MyApplication :Application(){
     override fun onCreate() {
         super.onCreate()
         context =applicationContext
-        AVOSCloud.initializeSecurely(this, "EujCJaz5mTgtmx1SrU1S31Yn-gzGzoHsz", "https://eujcjaz5.lc-cn-n1-shared.com");
+        AVOSCloud.initialize(this,"EujCJaz5mTgtmx1SrU1S31Yn-gzGzoHsz","F5KDdcrdQw4dsBBLM7fSMbcj","https://eujcjaz5.lc-cn-n1-shared.com")
     }
 }

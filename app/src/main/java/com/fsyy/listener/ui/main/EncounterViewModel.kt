@@ -59,6 +59,6 @@ class EncounterViewModel :ViewModel(){
     }
     val likesLiveData:LiveData<Result<List<AVObject>>> =Transformations.switchMap(paramPostsLiveData){
         LogUtils.e("执行like的SwitchMap")
-        Repository.loadLikes(it)
+        Repository.loadPostLikes(it)
     }
 }

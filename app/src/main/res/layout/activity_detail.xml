@@ -45,7 +45,7 @@
             android:layout_toStartOf="@id/detail_submit"
             android:layout_toEndOf="@id/detail_user_photo"
             android:background="@drawable/detail_edit_bg"
-            android:maxLines="3"
+            android:maxLines="5"
             android:padding="@dimen/inner_padding_top"
             android:textSize="@dimen/commonTextSizeSmall" />
     </RelativeLayout>

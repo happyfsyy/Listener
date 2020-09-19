@@ -48,7 +48,6 @@ class EncounterFragment : Fragment() {
 
     private fun observeViewModel(){
         viewModel.postsLiveData.observe(this, Observer {
-            encounter_swipeRefresh.isRefreshing=false
             val posts=it.getOrNull()
             //else已经在Repository中处理过，这里只需要处理posts!=null的情况
             if(posts!=null){
@@ -56,8 +55,9 @@ class EncounterFragment : Fragment() {
                 for(post in posts){
                     viewModel.postList.add(post.toPost())
                 }
-                //查询用户是否点赞过
                 viewModel.loadLikes(posts)
+            }else{
+                encounter_swipeRefresh.isRefreshing=false
             }
         })
         viewModel.morePostsLiveData.observe(this, Observer {
@@ -67,6 +67,8 @@ class EncounterFragment : Fragment() {
                     viewModel.postList.add(post.toPost())
                 }
                 viewModel.loadLikes(posts)
+            }else{
+                encounter_swipeRefresh.isRefreshing=false
             }
         })
         viewModel.likesLiveData.observe(this, Observer {
@@ -74,7 +76,7 @@ class EncounterFragment : Fragment() {
             if(likes!=null){
                 LogUtils.e("like表的数量${likes.size}")
                 for(like in likes){
-                    //查询like表中的所有数据，与刚刚加载的几个post进行对比，判断我是否点赞过
+                    //查询like表中的所有数据，与刚刚加载的几个post进行对比，判断是否点赞过
                     //todo 这里没有include的话，那么getPost有可能是null，测试一下
                     val postId=like.getAVObject<AVObject>("post").objectId
                     val range= limit*viewModel.loadCountLiveData.value!! until viewModel.postList.size
@@ -85,7 +87,11 @@ class EncounterFragment : Fragment() {
                         }
                     }
                 }
+                //TODO 将isRefreshing移到了这里
+                encounter_swipeRefresh.isRefreshing=false
                 adapter.notifyDataSetChanged()
+            }else{
+                encounter_swipeRefresh.isRefreshing=false
             }
         })
     }

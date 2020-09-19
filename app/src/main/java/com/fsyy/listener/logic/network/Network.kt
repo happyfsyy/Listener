@@ -17,10 +17,12 @@ object Network {
 
     suspend fun loadPosts(limit:Int):List<AVObject> =PostService.genLoadQuery(limit).queryAV()
     suspend fun loadMorePosts(limit: Int,loadCount:Int):List<AVObject> =PostService.genLoadMoreQuery(limit,loadCount).queryAV()
-    suspend fun loadLikes(posts:List<AVObject>)=LikeService.genPostLikeQuery(posts).queryAV()
+    suspend fun loadPostLikes(posts:List<AVObject>)=LikeService.genPostLikeQuery(posts).queryAV()
 
-    suspend fun loadComment(limit: Int,objectId:String)=CommentService.genLoadQuery(limit,objectId).queryAV()
-
+    suspend fun loadComment(limit: Int,loadCount: Int,objectId:String)=CommentService.genLoadQuery(limit,loadCount,objectId).queryAV()
+    suspend fun fetchNewPost(postId:String)=AVObject.createWithoutData("Post",postId).fetchNew()
+    fun publishComment(map: Map<String, Any?>, success: (avObject: AVObject) -> Unit)=CommentService.genComment(map).saveAV(success)
+    suspend fun loadCommentLikes(comments:List<AVObject>)=LikeService.genCommentLikeQuery(comments).queryAV()
 
     private suspend fun AVQuery<AVObject>.queryAV():List<AVObject>{
         LogUtils.e("执行Network的queryAV")
@@ -54,5 +56,20 @@ object Network {
         override fun onComplete() {
         }
     })
-
+    private suspend fun AVObject.fetchNew():AVObject{
+        return suspendCoroutine {
+            fetchInBackground().subscribe(object:Observer<AVObject>{
+                override fun onSubscribe(d: Disposable) {
+                }
+                override fun onNext(t: AVObject) {
+                    it.resume(t)
+                }
+                override fun onError(e: Throwable) {
+                    it.resumeWithException(e)
+                }
+                override fun onComplete() {
+                }
+            })
+        }
+    }
 }

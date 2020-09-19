@@ -6,6 +6,7 @@ import com.fsyy.listener.utils.extension.valuesOfAVObject
 
 object PostService {
     fun genLoadQuery(limitNum:Int):AVQuery<AVObject> = AVQuery<AVObject>("Post").apply {
+        //todo 根据updatedAt将Post进行排序，但是有个问题，每次点赞取消赞，都会更新updatedAt，我想设置为只有评论才更新updatedAt
         limit=limitNum
         include("author")
         orderByDescending("updatedAt")

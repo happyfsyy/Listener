@@ -22,14 +22,22 @@ object Repository {
         val response=Network.loadMorePosts(limit,loadCount)
         Result.success(response)
     }
-    fun loadLikes(post:List<AVObject>)= query(Dispatchers.Main){
-        val response=Network.loadLikes(post)
+    fun loadPostLikes(post:List<AVObject>)= query(Dispatchers.Main){
+        val response=Network.loadPostLikes(post)
         Result.success(response)
     }
 
 
-    fun loadComment(limit: Int,objectId:String)= query(Dispatchers.Main){
-        val response=Network.loadComment(limit,objectId)
+    fun loadComment(limit: Int,loadCount: Int,objectId:String)= query(Dispatchers.Main){
+        val response=Network.loadComment(limit,loadCount,objectId)
+        Result.success(response)
+    }
+    fun fetchNewPost(postId:String)= query(Dispatchers.Main){
+        val response=Network.fetchNewPost(postId)
+        Result.success(response)
+    }
+    fun loadCommentLikes(comments:List<AVObject>)= query(Dispatchers.Main){
+        val response=Network.loadCommentLikes(comments)
         Result.success(response)
     }
 

@@ -12,6 +12,7 @@ import com.fsyy.listener.ui.main.CommentViewHolder
 import com.fsyy.listener.ui.main.PostViewHolder
 import com.fsyy.listener.ui.main.TreeHoleViewHolder
 import com.fsyy.listener.utils.extension.displayDate
+import com.fsyy.listener.utils.listener.OnLikeClickListener
 
 class DetailAdapter(private val list:List<TreeHole>):RecyclerView.Adapter<TreeHoleViewHolder>() {
     override fun getItemViewType(position: Int): Int {
@@ -21,16 +22,24 @@ class DetailAdapter(private val list:List<TreeHole>):RecyclerView.Adapter<TreeHo
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TreeHoleViewHolder =if(viewType==TreeHole.POST){
         val view=LayoutInflater.from(parent.context).inflate(R.layout.post_item,parent,false)
-        PostViewHolder(view)
+        PostViewHolder(view).apply {
+            likeImg.setOnClickListener {
+                postLikeClickListener(it,adapterPosition)
+            }
+        }
     }else{
         val view=LayoutInflater.from(parent.context).inflate(R.layout.comment_item,parent,false)
-        CommentViewHolder(view)
+        CommentViewHolder(view).apply {
+            likeImg.setOnClickListener {
+                commentLikeClickListener(it,adapterPosition)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: TreeHoleViewHolder, position: Int) {
         when(holder){
             is PostViewHolder->{
-                //todo 加载用户头像，加载是否赞过
+                //todo 加载用户头像
                 val post=list[position] as Post
                 holder.userName.text=post.userName
                 holder.content.text=post.content
@@ -55,9 +64,22 @@ class DetailAdapter(private val list:List<TreeHole>):RecyclerView.Adapter<TreeHo
                 holder.likeCount.text=comment.likeCount.toString()
                 holder.content.text=comment.content
                 holder.date.text=comment.date.displayDate()
+                if(comment.isLike)
+                    holder.likeImg.setImageResource(R.drawable.like_selected)
+                else
+                    holder.likeImg.setImageResource(R.drawable.like)
             }
         }
     }
 
     override fun getItemCount(): Int=list.size
+
+    private lateinit var postLikeClickListener:OnLikeClickListener
+    private lateinit var commentLikeClickListener: OnLikeClickListener
+    fun setOnPostLikeClickListener(listener:OnLikeClickListener){
+        this.postLikeClickListener=listener
+    }
+    fun setOnCommentLikeClickListener(listener:OnLikeClickListener){
+        this.commentLikeClickListener=listener
+    }
 }
