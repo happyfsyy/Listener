@@ -1,4 +1,4 @@
 /build
 /src/androidTest
 /src/test
-/src/main/com.fsyy.listener/MyApplication.kt
+/src/main/java/com/fsyy/listener/ui/MyApplication.kt
