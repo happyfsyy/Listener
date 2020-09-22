@@ -1,6 +1,7 @@
 package com.fsyy.listener.ui.detail
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import com.fsyy.listener.logic.model.TreeHole
 import com.fsyy.listener.ui.main.CommentViewHolder
 import com.fsyy.listener.ui.main.PostViewHolder
 import com.fsyy.listener.ui.main.TreeHoleViewHolder
+import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.extension.displayDate
 import com.fsyy.listener.utils.listener.OnInnerCommentClickListener
 import com.fsyy.listener.utils.listener.OnInnerCommentLoadMoreListener
@@ -48,6 +50,7 @@ class DetailAdapter(private val list:List<TreeHole>,private val context: Context
     }
 
     override fun onBindViewHolder(holder: TreeHoleViewHolder, position: Int) {
+        LogUtils.e("BindViewHolder")
         when(holder){
             is PostViewHolder->{
                 //todo 加载用户头像

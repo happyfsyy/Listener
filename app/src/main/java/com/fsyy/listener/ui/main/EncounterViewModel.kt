@@ -5,6 +5,7 @@ import cn.leancloud.AVObject
 import com.fsyy.listener.logic.Repository
 import com.fsyy.listener.logic.model.Post
 import com.fsyy.listener.logic.model.PostLoadMoreParams
+import com.fsyy.listener.logic.network.Network
 import com.fsyy.listener.utils.LogUtils
 
 class EncounterViewModel :ViewModel(){
@@ -61,4 +62,9 @@ class EncounterViewModel :ViewModel(){
         LogUtils.e("执行like的SwitchMap")
         Repository.loadPostLikes(it)
     }
+
+    /**
+     * 点赞，存储进点赞的表里
+     */
+    fun saveLike(map: Map<String,Any?>,success:(avObject:AVObject)->Unit)=Network.saveLike(map,success)
 }

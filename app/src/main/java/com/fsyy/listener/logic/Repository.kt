@@ -32,11 +32,13 @@ object Repository {
 
 
     fun loadCommentLikes(comments:List<AVObject>)= query(Dispatchers.Main){
+        LogUtils.e("加载评论的点赞情况")
         val response=Network.loadCommentLikes(comments)
         Result.success(response)
     }
     fun loadAllComments(limit: Int,loadCount: Int,objectId: String)= query(Dispatchers.Main){
         coroutineScope {
+            LogUtils.e("加载所有的评论")
             val deferredComments=async { Network.loadComment(limit,loadCount,objectId) }
             val deferredInnerComments=async { Network.loadInnerComment(limit,loadCount, objectId) }
             val commentList=deferredComments.await()

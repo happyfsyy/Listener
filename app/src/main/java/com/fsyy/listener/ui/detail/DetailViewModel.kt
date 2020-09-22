@@ -94,4 +94,6 @@ class DetailViewModel:ViewModel() {
     val allInnerComments=Transformations.switchMap(innerCommentParamsLiveData){
         Repository.loadAllInnerComments(it.objectId,it.floor)
     }
+
+    fun saveLike(map:Map<String,Any?>,success: (avObject: AVObject) -> Unit)=Network.saveLike(map,success)
 }

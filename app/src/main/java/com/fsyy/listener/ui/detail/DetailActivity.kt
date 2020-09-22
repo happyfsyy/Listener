@@ -32,7 +32,7 @@ import kotlin.collections.ArrayList
 class DetailActivity : AppCompatActivity() {
     private lateinit var adapter: DetailAdapter
     private val viewModel by lazy { ViewModelProvider(this).get(DetailViewModel::class.java) }
-    private val limit=10
+    private val limit=2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,10 +58,10 @@ class DetailActivity : AppCompatActivity() {
             if(allComments!=null){
                 val commentAVList=allComments.commentList
                 val innerCommentAVList=allComments.innerCommentList
-                //TODO 加载comment，将innerCmmentList数据加入到Comment类中，加载like
                 for(avObject in commentAVList){
                     viewModel.dataList.add(avObject.toComment())
                 }
+                LogUtils.e("执行loadLikes方法前，datalist.size是${viewModel.dataList.size}")
                 viewModel.loadLikes(commentAVList)
                 val innerCommentList=ArrayList<InnerComment>()
                 for(avObject in innerCommentAVList){
@@ -73,7 +73,6 @@ class DetailActivity : AppCompatActivity() {
                     for(i in range){
                         val comment=viewModel.dataList[i] as Comment
                         if(comment.floor==floor){
-                            //todo 这里的comment是viewmodel.dataList[i]么？因为已经强制转化了，是引用传递么
                             comment.innerCommentList.add(innerComment)
                             break
                         }
@@ -83,23 +82,31 @@ class DetailActivity : AppCompatActivity() {
             }
         }
         viewModel.likesLiveData.observe(this){
+            LogUtils.e("已经获得评论的点赞情况")
             val likes=it.getOrNull()
             if(likes!=null){
                 //根据objectId，查询对应的comment，就将它的isLike设置为true
-                val startPos=limit*viewModel.loadCountLiveData.value!!+1
+
+                val startPos=if(viewModel.loadCountLiveData.value==0){
+                    0
+                }else{
+                    limit*viewModel.loadCountLiveData.value!!+1
+                }
                 val range= startPos until viewModel.dataList.size
+                LogUtils.e("当前数据的大小是${viewModel.dataList.size}")
+                LogUtils.e("startPos是$startPos,datalist.size-startPost是${viewModel.dataList.size-startPos}")
                 for(like in likes){
                     val commentId=like.getAVObject<AVObject>("comment").objectId
-                    //todo 将这里的范围根据loadCount重新设置，adapter的时候，就可以只notifyItemRangeChanged
-
                     for(i in range){
                         if(commentId==viewModel.dataList[i].objectId){
                             viewModel.dataList[i].isLike=true
                             viewModel.dataList[i].likeObjectId=like.objectId
+                            break
                         }
                     }
                 }
-                adapter.notifyItemRangeChanged(startPos,viewModel.dataList.size-startPos)
+//                adapter.notifyItemRangeChanged(startPos,viewModel.dataList.size-startPos)
+                adapter.notifyDataSetChanged()
             }
             detail_swipe_refresh.isRefreshing=false
         }
@@ -237,24 +244,18 @@ class DetailActivity : AppCompatActivity() {
             viewModel.dataList[pos].isLike=true
             viewModel.dataList[pos].likeCount++
             if(type==TreeHole.COMMENT){
-                AVObject("Like").apply {
-                    put("user",AVUser.currentUser())
-                    put("comment",AVObject.createWithoutData("Comment",viewModel.dataList[pos].objectId))
-                    saveEventually()
-                }
-                AVObject.createWithoutData("Comment",viewModel.dataList[pos].objectId).apply {
-                    increment("likeCount")
-                    saveEventually()
+                val comment=AVObject.createWithoutData("Comment",viewModel.dataList[pos].objectId)
+                viewModel.saveLike(mapOf("user" to AVUser.currentUser(),"comment" to comment)){
+                    viewModel.dataList[pos].likeObjectId=it.objectId
+                    comment.increment("likeCount")
+                    comment.saveEventually()
                 }
             }else{
-                AVObject("Like").apply {
-                    put("user",AVUser.currentUser())
-                    put("post",AVObject.createWithoutData("Post",viewModel.dataList[pos].objectId))
-                    saveEventually()
-                }
-                AVObject.createWithoutData("Post",viewModel.dataList[pos].objectId).apply {
-                    increment("likeCount")
-                    saveEventually()
+                val post=AVObject.createWithoutData("Post",viewModel.dataList[pos].objectId)
+                viewModel.saveLike(mapOf("user" to AVUser.currentUser(),"post" to post)){
+                    viewModel.dataList[pos].likeObjectId=it.objectId
+                    post.increment("likeCount")
+                    post.saveEventually()
                 }
             }
         }
@@ -262,11 +263,10 @@ class DetailActivity : AppCompatActivity() {
     }
     private fun initRecyclerView(){
         detail_recyclerview.addOnScrollListener(object :RecyclerView.OnScrollListener(){
-            var isPullUp=false
+            var lastVisiblePos=0
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                val layoutManager=recyclerView.layoutManager as LinearLayoutManager
-                val lastVisiblePos=layoutManager.findLastVisibleItemPosition()
-                if(newState==RecyclerView.SCROLL_STATE_IDLE&&lastVisiblePos+1==viewModel.dataList.size&&isPullUp
+                LogUtils.e("滑动状态更改,newState=$newState")
+                if(newState==RecyclerView.SCROLL_STATE_IDLE&&lastVisiblePos+1==viewModel.dataList.size
                     &&viewModel.dataList.size==(viewModel.loadCountLiveData.value!!+1)*limit +1){
                     LogUtils.e("执行上拉加载更多")
                     loadMoreComment()
@@ -275,9 +275,8 @@ class DetailActivity : AppCompatActivity() {
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 LogUtils.e("dy=$dy,touchslop=${ViewConfiguration.get(this@DetailActivity).scaledTouchSlop}")
-                if(dy<-ViewConfiguration.get(this@DetailActivity).scaledTouchSlop){
-                    isPullUp=true
-                }
+                val layoutManager=recyclerView.layoutManager as LinearLayoutManager
+                lastVisiblePos=layoutManager.findLastVisibleItemPosition()
             }
         })
         detail_recyclerview.layoutManager=LinearLayoutManager(this)

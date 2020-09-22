@@ -12,7 +12,13 @@ object LikeService {
         whereEqualTo("user",AVUser.currentUser())
     }
     fun genCommentLikeQuery(comments:List<AVObject>)=AVQuery<AVObject>("Like").apply {
+        LogUtils.e("获取评论Like的Query")
         whereContainedIn("comment",comments)
         whereEqualTo("user",AVUser.currentUser())
+    }
+    fun genLike(map:Map<String,Any?>)=AVObject("Like").apply {
+        for((key,value) in map){
+            put(key,value)
+        }
     }
 }

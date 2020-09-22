@@ -27,6 +27,7 @@ object CommentService {
      * 查询Post的所有innerComment，只查询前两个，也就是innerFloor是1和2的
      */
     fun genLoadInnerQuery(limitNum: Int,loadCount: Int,objectId: String)=AVQuery<AVObject>("Comment").apply {
+        LogUtils.e("执行CommentService的loadInnerQuery")
         whereEqualTo("post",AVObject.createWithoutData("Post",objectId))
         whereEqualTo("isInner",true)
         whereGreaterThan("floor",limitNum*loadCount)

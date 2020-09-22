@@ -88,6 +88,7 @@ class EncounterFragment : Fragment() {
                         }
                     }
                 }
+                LogUtils.e("postList[0]的likeObjectId是${viewModel.postList[0].likeObjectId}")
                 //TODO 将isRefreshing移到了这里
                 encounter_swipeRefresh.isRefreshing=false
                 adapter.notifyDataSetChanged()
@@ -163,16 +164,17 @@ class EncounterFragment : Fragment() {
         val post=viewModel.postList[pos]
         if(post.isLike){
             LogUtils.e("我要开始将like保存进like表了")
-            val like=AVObject("Like")
             val postAvObject=AVObject.createWithoutData("Post",post.objectId)
-            like.put("user",AVUser.currentUser())
-            like.put("post",postAvObject)
-            like.saveEventually()
-
-            LogUtils.e("我要开始将点赞数量保存进Post表了")
-            postAvObject.increment("likeCount")
-            postAvObject.saveEventually()
+            viewModel.saveLike(mapOf("user" to AVUser.currentUser(),"post" to postAvObject)){
+                LogUtils.e("我要开始将点赞数量保存进Post表了")
+                post.likeObjectId=it.objectId
+                postAvObject.increment("likeCount")
+                postAvObject.saveEventually()
+            }
         }else{
+            LogUtils.e("我要删除，但是post.likeObjectId却是${post.likeObjectId}")
+            //TODO 我得去获取post的likeObjectId
+
             val like=AVObject.createWithoutData("Like",post.likeObjectId)
             like.deleteEventually()
             val postAvObject=AVObject.createWithoutData("Post",post.objectId)

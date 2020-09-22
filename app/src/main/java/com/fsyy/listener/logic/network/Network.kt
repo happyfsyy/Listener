@@ -19,6 +19,8 @@ object Network {
     suspend fun loadMorePosts(limit: Int,loadCount:Int):List<AVObject> =PostService.genLoadMoreQuery(limit,loadCount).queryAV()
     suspend fun loadPostLikes(posts:List<AVObject>)=LikeService.genPostLikeQuery(posts).queryAV()
 
+    fun saveLike(map: Map<String, Any?>, success: (avObject: AVObject) -> Unit)=LikeService.genLike(map).saveAV(success)
+
     suspend fun loadComment(limit: Int,loadCount: Int,objectId:String)=CommentService.genLoadQuery(limit,loadCount,objectId).queryAV()
     suspend fun loadCommentLikes(comments:List<AVObject>)=LikeService.genCommentLikeQuery(comments).queryAV()
     suspend fun loadInnerComment(limit: Int,loadCount: Int,objectId: String)=CommentService.genLoadInnerQuery(limit,loadCount,objectId).queryAV()
