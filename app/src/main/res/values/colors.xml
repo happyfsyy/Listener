@@ -11,4 +11,5 @@
     <color name="tagColor">#80a9d3</color>
     <color name="scrollbarColor">#6699cc</color>
     <color name="innerCommentBg">#e2e7eb</color>
+    <color name="innerCommentMoreColor">#6699cc</color>
 </resources>

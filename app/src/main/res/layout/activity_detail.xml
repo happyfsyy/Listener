@@ -21,13 +21,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageView
-            android:id="@+id/detail_user_photo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentStart="true"
-            android:padding="@dimen/outer_padding"
-            android:src="@drawable/photo_boy" />
+<!--        <ImageView-->
+<!--            android:id="@+id/detail_user_photo"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:padding="@dimen/outer_padding"-->
+<!--            android:src="@drawable/photo_boy" />-->
 
         <ImageView
             android:id="@+id/detail_submit"
@@ -43,11 +43,12 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/detail_submit"
-            android:layout_toEndOf="@id/detail_user_photo"
+            android:layout_alignParentStart="true"
             android:background="@drawable/detail_edit_bg"
             android:maxLines="5"
             android:padding="@dimen/inner_padding_top"
-            android:textSize="@dimen/commonTextSizeSmall" />
+            android:textSize="@dimen/commonTextSizeSmall"
+            android:layout_marginStart="@dimen/outer_padding"/>
     </RelativeLayout>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/detail_swipe_refresh"

@@ -19,5 +19,4 @@ open class TreeHole(val objectId: String,val userId: String, val userName: Strin
         const val COMMENT=2
         const val INNER_COMMENT=3
     }
-    //TODO
 }

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:background="@drawable/detail_comment_bg" android:padding="@dimen/inner_padding"
+    android:background="@drawable/personal_item_bg" android:padding="@dimen/inner_padding"
     android:layout_marginTop="3dp">
     <ImageView
         android:id="@+id/comment_user_photo"
@@ -68,21 +68,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/comment_content"
         android:background="@color/innerCommentBg"
-        android:padding="@dimen/inner_padding">
-        <TextView
-            android:id="@+id/comment_inner_text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/commonTextSizeSmall" />
-        <TextView
-            android:id="@+id/comment_inner_text2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/commonTextSizeSmall"/>
-        <TextView
-            android:id="@+id/comment_inner_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/comment_inner_more"/>
+        android:paddingStart="@dimen/inner_padding"
+        android:paddingEnd="@dimen/inner_padding"
+        android:paddingTop="@dimen/inner_padding_top"
+        android:paddingBottom="@dimen/inner_padding_top">
+<!--        <TextView-->
+<!--            android:id="@+id/comment_inner_text1"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="@dimen/commonTextSizeSmall" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/comment_inner_text2"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="@dimen/commonTextSizeSmall"/>-->
+<!--        <TextView-->
+<!--            android:id="@+id/comment_inner_more"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/comment_inner_more"/>-->
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

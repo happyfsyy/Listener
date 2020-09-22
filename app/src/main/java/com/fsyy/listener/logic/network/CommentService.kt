@@ -23,17 +23,30 @@ object CommentService {
 
     fun genComment(map:Map<String,Any?>)= valuesOfAVObject("Comment",map)
 
+    /**
+     * 查询Post的所有innerComment，只查询前两个，也就是innerFloor是1和2的
+     */
     fun genLoadInnerQuery(limitNum: Int,loadCount: Int,objectId: String)=AVQuery<AVObject>("Comment").apply {
         whereEqualTo("post",AVObject.createWithoutData("Post",objectId))
         whereEqualTo("isInner",true)
-        //floor范围是limitNum*loadCount,到limit*(loadCount+1)
-        //innerFloor范围是1和2
         whereGreaterThan("floor",limitNum*loadCount)
         whereLessThanOrEqualTo("floor",limitNum*(loadCount+1))
         whereContainedIn("innerFloor", listOf(1,2))
         include("fromAuthor")
         include("toAuthor")
         orderByAscending("floor")
+        orderByAscending("innerFloor")
+    }
+
+    /**
+     * 查询Post下的某个Comment的所有InnerComment
+     */
+    fun genAllInnerComments(objectId:String,floor:Int)=AVQuery<AVObject>("Comment").apply {
+        whereEqualTo("post",AVObject.createWithoutData("Post",objectId))
+        whereEqualTo("floor",floor)
+        whereEqualTo("isInner",true)
+        include("fromAuthor")
+        include("toAuthor")
         orderByAscending("innerFloor")
     }
 }

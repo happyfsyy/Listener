@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import cn.leancloud.AVObject
 import com.fsyy.listener.logic.Repository
 import com.fsyy.listener.logic.model.CommentLoadMoreParams
+import com.fsyy.listener.logic.model.InnerCommentParams
 import com.fsyy.listener.logic.model.Post
 import com.fsyy.listener.logic.model.TreeHole
 import com.fsyy.listener.logic.network.Network
@@ -35,11 +36,6 @@ class DetailViewModel:ViewModel() {
      * 根据帖子的objectId，和查询的数量，获取Comment，只需要管擦commentLiveData即可
      */
     private val loadLiveData=MutableLiveData<CommentLoadMoreParams>()
-//    val commentLiveData=Transformations.switchMap(loadLiveData){
-//        LogUtils.e("执行DetailViewModel的Transformation")
-//        LogUtils.e("commentLiveData中的loadCount是${it.loadCount}")
-//        Repository.loadComment(it.limit,it.loadCount,it.objectId)
-//    }
     fun loadComment(limit:Int,objectId:String,loadCount:Int){
         val params=CommentLoadMoreParams(objectId,limit,loadCount)
         loadLiveData.value=params
@@ -71,4 +67,31 @@ class DetailViewModel:ViewModel() {
     }
 
     fun publishComment(map:Map<String,Any?>,success: (avObject: AVObject) -> Unit)=Network.publishComment(map,success)
+
+    val floorLiveData=MutableLiveData(0)
+    val innerFloorLiveData=MutableLiveData(0)
+    val toUserNameLiveData=MutableLiveData("")
+
+    /**
+     * 刷新当前的comment，获取comment的floor
+     */
+    private val commentIdLiveData=MutableLiveData<String>()
+    fun fetchNewComment(commentId:String){
+        commentIdLiveData.value=commentId
+    }
+    val newCommentLiveData=Transformations.switchMap(commentIdLiveData){
+        Repository.fetchNewComment(it)
+    }
+
+    /**
+     * 是为了加载某一层Comment的所有InnerComment
+     */
+    private val innerCommentParamsLiveData=MutableLiveData<InnerCommentParams>()
+    fun loadAllInnerComments(objectId:String,floor:Int){
+        val params=InnerCommentParams(objectId,floor)
+        innerCommentParamsLiveData.value=params
+    }
+    val allInnerComments=Transformations.switchMap(innerCommentParamsLiveData){
+        Repository.loadAllInnerComments(it.objectId,it.floor)
+    }
 }

@@ -2,6 +2,7 @@ package com.fsyy.listener.ui.main
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.fsyy.listener.R
@@ -24,4 +25,5 @@ class CommentViewHolder(itemView: View):TreeHoleViewHolder(itemView){
     val likeCount:TextView=itemView.findViewById(R.id.comment_like_count)
     val content:TextView=itemView.findViewById(R.id.comment_content)
     val date:TextView=itemView.findViewById(R.id.comment_date)
+    val innerLayout:LinearLayout=itemView.findViewById(R.id.comment_inner_layout)
 }

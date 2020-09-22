@@ -3,6 +3,7 @@ package com.fsyy.listener.ui.detail
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewConfiguration
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,12 +32,16 @@ import kotlin.collections.ArrayList
 class DetailActivity : AppCompatActivity() {
     private lateinit var adapter: DetailAdapter
     private val viewModel by lazy { ViewModelProvider(this).get(DetailViewModel::class.java) }
-    private val limit=2
+    private val limit=10
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+        //todo 评论之后都要弹出进度条，开始转啊转的，然后是max的评论发布成功
+
         LogUtils.e("Detail：intent.get()是${intent.getSerializableExtra("post") as Post}")
         viewModel.post=intent.getSerializableExtra("post") as Post
+        viewModel.toUserNameLiveData.value="楼主"
         LogUtils.e(viewModel.post.toString())
         if (viewModel.post.commentCount>0){
             loadComment()
@@ -48,16 +53,6 @@ class DetailActivity : AppCompatActivity() {
         refreshData()
     }
     private fun initObserver(){
-//        viewModel.commentLiveData.observe(this){
-//            val commentAVList=it.getOrNull()
-//            LogUtils.e("评论的size大小是${commentAVList?.size?:0}")
-//            if(commentAVList!=null){
-//                for(avObject in commentAVList){
-//                    viewModel.dataList.add(avObject.toComment())
-//                }
-//                viewModel.loadLikes(commentAVList)
-//            }
-//        }
         viewModel.allCommentsLiveData.observe(this){
             val allComments=it.getOrNull()
             if(allComments!=null){
@@ -89,7 +84,6 @@ class DetailActivity : AppCompatActivity() {
         }
         viewModel.likesLiveData.observe(this){
             val likes=it.getOrNull()
-            detail_swipe_refresh.isRefreshing=false
             if(likes!=null){
                 //根据objectId，查询对应的comment，就将它的isLike设置为true
                 val startPos=limit*viewModel.loadCountLiveData.value!!+1
@@ -107,6 +101,7 @@ class DetailActivity : AppCompatActivity() {
                 }
                 adapter.notifyItemRangeChanged(startPos,viewModel.dataList.size-startPos)
             }
+            detail_swipe_refresh.isRefreshing=false
         }
 
         viewModel.newPostLiveData.observe(this){ result ->
@@ -130,6 +125,53 @@ class DetailActivity : AppCompatActivity() {
                }
             }
         }
+
+        viewModel.toUserNameLiveData.observe(this){
+            LogUtils.e("Observe了，value是${viewModel.toUserNameLiveData.value}")
+            detail_edit.hint=String.format(getString(R.string.detail_edit_hint),viewModel.toUserNameLiveData.value)
+        }
+        viewModel.newCommentLiveData.observe(this){ it ->
+            val newComment=it.getOrNull()
+            if(newComment!=null){
+                val commentCount=newComment.getInt("commentCount")
+                val requestedInnerFloor=commentCount+1
+                val floor=viewModel.floorLiveData.value!!
+                val innerFloor=viewModel.innerFloorLiveData.value!!
+                val comment=viewModel.dataList[floor] as Comment
+                val toAuthor=if(innerFloor==0){
+                    AVObject.createWithoutData("_User",comment.userId)
+                }else{
+                    AVObject.createWithoutData("_User",comment.innerCommentList[innerFloor].userId)
+                }
+                val content=detail_edit.text.toString()
+                viewModel.publishComment(mapOf("fromAuthor" to AVUser.currentUser(), "toAuthor" to toAuthor,
+                "content" to content,"post" to AVObject.createWithoutData("Post",viewModel.post.objectId),
+                "floor" to floor,"innerFloor" to requestedInnerFloor,"isInner" to true)){innerComment->
+                    //todo
+                    val commentAV=AVObject.createWithoutData("Comment",comment.objectId)
+                    commentAV.increment("commentCount")
+                    commentAV.saveEventually()
+                    comment.commentCount++
+                    //TODO 保存好之后，查询这个评论的所有innerComment，展示出来
+
+                    viewModel.loadAllInnerComments(viewModel.post.objectId,floor)
+                }
+            }
+        }
+        viewModel.allInnerComments.observe(this){
+            val innerComments=it.getOrNull()
+            if(innerComments!=null){
+                //todo list更新，对应floor的adapter更新
+                val floor=viewModel.floorLiveData.value!!
+                val comment:Comment=viewModel.dataList[floor] as Comment
+                comment.innerCommentList.clear()
+                for(innerCommentAV in innerComments){
+                    comment.innerCommentList.add(innerCommentAV.toInnerComment())
+                }
+                clearUI()
+                adapter.notifyItemChanged(floor)
+            }
+        }
     }
     private fun loadComment(){
         LogUtils.e("loadComment()中的loadCount是0")
@@ -142,12 +184,39 @@ class DetailActivity : AppCompatActivity() {
     }
     private fun initAdapter(){
         viewModel.dataList.add(viewModel.post)
-        adapter= DetailAdapter(viewModel.dataList)
+        adapter= DetailAdapter(viewModel.dataList,this)
         adapter.setOnPostLikeClickListener { _, _ ->
             updateUI(0,TreeHole.POST)
         }
         adapter.setOnCommentLikeClickListener { _, pos ->
             updateUI(pos,TreeHole.COMMENT)
+        }
+        adapter.setOnItemClickListener { view, pos ->
+            LogUtils.e("pos是$pos")
+            if(pos==0){
+                viewModel.toUserNameLiveData.value="楼主"
+                viewModel.floorLiveData.value=0
+                viewModel.innerFloorLiveData.value=0
+            }else{
+                viewModel.floorLiveData.value=pos
+                viewModel.innerFloorLiveData.value=0
+                val comment=viewModel.dataList[pos] as Comment
+                viewModel.toUserNameLiveData.value=comment.userName
+            }
+        }
+        adapter.setOnInnerCommentClickListener { pos, index ->
+            //todo 获取username，更改editText的hint，
+            LogUtils.e("pos是$pos,index是$index")
+            viewModel.floorLiveData.value=pos
+            viewModel.innerFloorLiveData.value=index
+            val comment=viewModel.dataList[pos] as Comment
+            viewModel.toUserNameLiveData.value=comment.innerCommentList[index].userName
+        }
+        adapter.setOnInnerCommentLoadMoreListener {view,floor->
+            //todo 获取这个floor的所有innerComment
+            viewModel.floorLiveData.value=floor
+            viewModel.loadAllInnerComments(viewModel.post.objectId,floor)
+
         }
     }
     private fun updateUI(pos:Int,type:Int){
@@ -220,7 +289,13 @@ class DetailActivity : AppCompatActivity() {
             refreshData()
         }
         detail_submit.setOnClickListener {
-            viewModel.fetchNewPost(viewModel.post.objectId)
+            //todo 提交的时候，获取最新的comment
+            if(viewModel.floorLiveData.value==0) {
+                viewModel.fetchNewPost(viewModel.post.objectId)
+            }else {
+                val comment=viewModel.dataList[viewModel.floorLiveData.value!!]
+                viewModel.fetchNewComment(comment.objectId)
+            }
         }
     }
     private fun refreshData(){

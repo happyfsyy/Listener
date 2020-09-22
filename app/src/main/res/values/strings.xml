@@ -48,4 +48,5 @@
     <string name="feedback_img_header">添加图片（选填）</string>
     <string name="feedback_submit">提交</string>
     <string name="comment_inner_more">查看更多></string>
+    <string name="detail_edit_hint">回复@%s:</string>
 </resources>

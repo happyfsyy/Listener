@@ -11,3 +11,5 @@ data class PostLoadMoreParams(val limit: Int,val loadCount:Int)
  * @param objectId post的objectId
  */
 data class CommentLoadMoreParams(val objectId:String,val limit: Int,val loadCount: Int)
+
+data class InnerCommentParams(val objectId: String,val floor:Int)

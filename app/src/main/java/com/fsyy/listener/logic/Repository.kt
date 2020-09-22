@@ -31,16 +31,8 @@ object Repository {
     }
 
 
-    fun loadComment(limit: Int,loadCount: Int,objectId:String)= query(Dispatchers.Main){
-        val response=Network.loadComment(limit,loadCount,objectId)
-        Result.success(response)
-    }
     fun loadCommentLikes(comments:List<AVObject>)= query(Dispatchers.Main){
         val response=Network.loadCommentLikes(comments)
-        Result.success(response)
-    }
-    fun loadInnerComment(limit: Int,loadCount: Int,objectId: String)= query(Dispatchers.Main){
-        val response=Network.loadInnerComment(limit,loadCount,objectId)
         Result.success(response)
     }
     fun loadAllComments(limit: Int,loadCount: Int,objectId: String)= query(Dispatchers.Main){
@@ -53,8 +45,16 @@ object Repository {
             Result.success(allComments)
         }
     }
+    fun loadAllInnerComments(objectId: String,floor:Int)= query(Dispatchers.Main){
+        val response=Network.loadAllInnerComments(objectId,floor)
+        Result.success(response)
+    }
     fun fetchNewPost(postId:String)= query(Dispatchers.Main){
         val response=Network.fetchNewPost(postId)
+        Result.success(response)
+    }
+    fun fetchNewComment(commentId:String)= query(Dispatchers.Main){
+        val response=Network.fetchNewComment(commentId)
         Result.success(response)
     }
 

@@ -22,8 +22,10 @@ object Network {
     suspend fun loadComment(limit: Int,loadCount: Int,objectId:String)=CommentService.genLoadQuery(limit,loadCount,objectId).queryAV()
     suspend fun loadCommentLikes(comments:List<AVObject>)=LikeService.genCommentLikeQuery(comments).queryAV()
     suspend fun loadInnerComment(limit: Int,loadCount: Int,objectId: String)=CommentService.genLoadInnerQuery(limit,loadCount,objectId).queryAV()
+    suspend fun loadAllInnerComments(objectId: String,floor:Int)=CommentService.genAllInnerComments(objectId,floor).queryAV()
 
     suspend fun fetchNewPost(postId:String)=AVObject.createWithoutData("Post",postId).fetchNew()
+    suspend fun fetchNewComment(commentId:String)=AVObject.createWithoutData("Comment",commentId).fetchNew()
     fun publishComment(map: Map<String, Any?>, success: (avObject: AVObject) -> Unit)=CommentService.genComment(map).saveAV(success)
 
 
