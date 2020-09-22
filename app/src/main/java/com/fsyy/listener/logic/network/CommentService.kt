@@ -12,14 +12,28 @@ object CommentService {
      */
     fun genLoadQuery(limitNum:Int,loadCount:Int,objectId:String)=AVQuery<AVObject>("Comment").apply {
         LogUtils.e("执行CommentService的loadQuery")
-        //todo 这里先不考虑楼中楼的情况，只将评论按照createdAt升序排列，之后需要按照floor排序
         limit=limitNum
         whereEqualTo("post",AVObject.createWithoutData("Post",objectId))
         whereEqualTo("isInner",false)
+        LogUtils.e("genLoadQuery()中的loadCount是$loadCount,跳过${limitNum*loadCount}条数据")
         skip(limitNum*loadCount)
         include("fromAuthor")
         orderByAscending("floor")
     }
 
     fun genComment(map:Map<String,Any?>)= valuesOfAVObject("Comment",map)
+
+    fun genLoadInnerQuery(limitNum: Int,loadCount: Int,objectId: String)=AVQuery<AVObject>("Comment").apply {
+        whereEqualTo("post",AVObject.createWithoutData("Post",objectId))
+        whereEqualTo("isInner",true)
+        //floor范围是limitNum*loadCount,到limit*(loadCount+1)
+        //innerFloor范围是1和2
+        whereGreaterThan("floor",limitNum*loadCount)
+        whereLessThanOrEqualTo("floor",limitNum*(loadCount+1))
+        whereContainedIn("innerFloor", listOf(1,2))
+        include("fromAuthor")
+        include("toAuthor")
+        orderByAscending("floor")
+        orderByAscending("innerFloor")
+    }
 }

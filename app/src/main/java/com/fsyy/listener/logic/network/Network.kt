@@ -20,9 +20,12 @@ object Network {
     suspend fun loadPostLikes(posts:List<AVObject>)=LikeService.genPostLikeQuery(posts).queryAV()
 
     suspend fun loadComment(limit: Int,loadCount: Int,objectId:String)=CommentService.genLoadQuery(limit,loadCount,objectId).queryAV()
+    suspend fun loadCommentLikes(comments:List<AVObject>)=LikeService.genCommentLikeQuery(comments).queryAV()
+    suspend fun loadInnerComment(limit: Int,loadCount: Int,objectId: String)=CommentService.genLoadInnerQuery(limit,loadCount,objectId).queryAV()
+
     suspend fun fetchNewPost(postId:String)=AVObject.createWithoutData("Post",postId).fetchNew()
     fun publishComment(map: Map<String, Any?>, success: (avObject: AVObject) -> Unit)=CommentService.genComment(map).saveAV(success)
-    suspend fun loadCommentLikes(comments:List<AVObject>)=LikeService.genCommentLikeQuery(comments).queryAV()
+
 
     private suspend fun AVQuery<AVObject>.queryAV():List<AVObject>{
         LogUtils.e("执行Network的queryAV")

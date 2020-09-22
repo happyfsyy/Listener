@@ -1,5 +1,6 @@
 package com.fsyy.listener.ui.detail
 
+import android.view.animation.Transformation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -34,14 +35,19 @@ class DetailViewModel:ViewModel() {
      * 根据帖子的objectId，和查询的数量，获取Comment，只需要管擦commentLiveData即可
      */
     private val loadLiveData=MutableLiveData<CommentLoadMoreParams>()
-    val commentLiveData=Transformations.switchMap(loadLiveData){
-        LogUtils.e("执行DetailViewModel的Transformation")
-        Repository.loadComment(it.limit,it.loadCount,it.objectId)
-    }
+//    val commentLiveData=Transformations.switchMap(loadLiveData){
+//        LogUtils.e("执行DetailViewModel的Transformation")
+//        LogUtils.e("commentLiveData中的loadCount是${it.loadCount}")
+//        Repository.loadComment(it.limit,it.loadCount,it.objectId)
+//    }
     fun loadComment(limit:Int,objectId:String,loadCount:Int){
         val params=CommentLoadMoreParams(objectId,limit,loadCount)
         loadLiveData.value=params
     }
+    val allCommentsLiveData=Transformations.switchMap(loadLiveData){
+        Repository.loadAllComments(it.limit,it.loadCount,it.objectId)
+    }
+
     /**
      * 提交评论的时候，根据postId获取最新的Post的commentCount，这样才可以得到floor
      */

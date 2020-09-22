@@ -3,6 +3,7 @@ package com.fsyy.listener.utils.extension
 import cn.leancloud.AVObject
 import cn.leancloud.AVUser
 import com.fsyy.listener.logic.model.Comment
+import com.fsyy.listener.logic.model.InnerComment
 import com.fsyy.listener.logic.model.Post
 
 
@@ -31,6 +32,19 @@ fun AVObject.toComment():Comment {
     val commentCount=getInt("commentCount")
     val floor=getInt("floor")
     return Comment(objectId,userId,"",userName,likeCount,content,date,commentCount,floor)
+}
+fun AVObject.toInnerComment():InnerComment{
+    val objectId=objectId
+    val fromUser=getAVObject<AVObject>("fromAuthor") as AVUser
+    val fromUserId=fromUser.objectId
+    val fromUserName=fromUser.username
+    val toUser=getAVObject<AVObject>("toAuthor") as AVUser
+    val toUserName=toUser.username
+    val content=getString("content")
+    val date=createdAt
+    val floor=getInt("floor")
+    val innerFloor=getInt("innerFloor")
+    return InnerComment(objectId,fromUserId,fromUserName,toUserName,content,date,floor,innerFloor)
 }
 fun valuesOfAVObject(className: String,map:Map<String,Any?>)=AVObject(className).apply {
     for((key,value) in map){

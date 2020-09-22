@@ -15,12 +15,21 @@
     <TextView
         android:id="@+id/comment_user_name"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
         android:textSize="@dimen/commonTextSizeSmall"
         app:layout_constraintStart_toEndOf="@id/comment_user_photo"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="@dimen/inner_padding"
-        android:gravity="center_vertical"/>
+        android:gravity="center_vertical"
+        android:textColor="@color/textColor"/>
+    <TextView
+        android:id="@+id/comment_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/comment_user_name"
+        app:layout_constraintStart_toEndOf="@id/comment_user_photo"
+        android:layout_marginStart="@dimen/inner_padding"
+        android:textSize="10sp" />
     <TextView
         android:id="@+id/comment_like_count"
         android:layout_width="wrap_content"
@@ -50,12 +59,30 @@
         app:layout_constraintTop_toBottomOf="@id/comment_user_photo"
         android:layout_marginTop="@dimen/inner_padding"
         android:textSize="@dimen/commonTextSize"/>
-    <TextView
-        android:id="@+id/comment_date"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/comment_inner_layout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/comment_content"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        android:textSize="@dimen/commonTextSizeSmall"
-        android:layout_marginTop="@dimen/inner_padding"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/comment_content"
+        android:background="@color/innerCommentBg"
+        android:padding="@dimen/inner_padding">
+        <TextView
+            android:id="@+id/comment_inner_text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/commonTextSizeSmall" />
+        <TextView
+            android:id="@+id/comment_inner_text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/commonTextSizeSmall"/>
+        <TextView
+            android:id="@+id/comment_inner_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/comment_inner_more"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -124,14 +125,21 @@ class EncounterFragment : Fragment() {
     }
     private fun initRecyclerView(){
         encounter_recyclerview.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+            var isPullUp=false
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 val layoutManager=recyclerView.layoutManager as LinearLayoutManager
                 val lastVisibleItemPos=layoutManager.findLastVisibleItemPosition()
                 LogUtils.e("滑动监测：lastVisibleItemPos=$lastVisibleItemPos,itemCount=${adapter.itemCount}")
-                if(newState==RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPos+1==adapter.itemCount
+                if(newState==RecyclerView.SCROLL_STATE_IDLE && lastVisibleItemPos+1==adapter.itemCount&&isPullUp
                     &&adapter.itemCount==(viewModel.loadCountLiveData.value!!+1)*limit){
                     LogUtils.e("执行加载更多")
                     loadMorePosts()
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if(dy<-ViewConfiguration.get(this@EncounterFragment.activity).scaledTouchSlop){
+                    isPullUp=true
                 }
             }
         })

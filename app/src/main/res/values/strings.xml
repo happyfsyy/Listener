@@ -47,4 +47,5 @@
     <string name="feedback_question_hint">输入您的问题，以便我们提供更好的帮助…</string>
     <string name="feedback_img_header">添加图片（选填）</string>
     <string name="feedback_submit">提交</string>
+    <string name="comment_inner_more">查看更多></string>
 </resources>

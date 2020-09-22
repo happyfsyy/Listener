@@ -3,11 +3,14 @@ package com.fsyy.listener.logic
 import androidx.lifecycle.liveData
 import cn.leancloud.AVObject
 import com.fsyy.listener.R
+import com.fsyy.listener.logic.model.AllComments
 import com.fsyy.listener.logic.network.Network
 import com.fsyy.listener.ui.MyApplication
 import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.extension.showToast
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
@@ -32,12 +35,26 @@ object Repository {
         val response=Network.loadComment(limit,loadCount,objectId)
         Result.success(response)
     }
-    fun fetchNewPost(postId:String)= query(Dispatchers.Main){
-        val response=Network.fetchNewPost(postId)
-        Result.success(response)
-    }
     fun loadCommentLikes(comments:List<AVObject>)= query(Dispatchers.Main){
         val response=Network.loadCommentLikes(comments)
+        Result.success(response)
+    }
+    fun loadInnerComment(limit: Int,loadCount: Int,objectId: String)= query(Dispatchers.Main){
+        val response=Network.loadInnerComment(limit,loadCount,objectId)
+        Result.success(response)
+    }
+    fun loadAllComments(limit: Int,loadCount: Int,objectId: String)= query(Dispatchers.Main){
+        coroutineScope {
+            val deferredComments=async { Network.loadComment(limit,loadCount,objectId) }
+            val deferredInnerComments=async { Network.loadInnerComment(limit,loadCount, objectId) }
+            val commentList=deferredComments.await()
+            val innerCommentList=deferredInnerComments.await()
+            val allComments=AllComments(commentList,innerCommentList)
+            Result.success(allComments)
+        }
+    }
+    fun fetchNewPost(postId:String)= query(Dispatchers.Main){
+        val response=Network.fetchNewPost(postId)
         Result.success(response)
     }
 

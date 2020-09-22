@@ -3,6 +3,7 @@ package com.fsyy.listener.ui.detail
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.ViewConfiguration
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +11,7 @@ import cn.leancloud.AVObject
 import cn.leancloud.AVUser
 import com.fsyy.listener.R
 import com.fsyy.listener.logic.model.Comment
+import com.fsyy.listener.logic.model.InnerComment
 import com.fsyy.listener.logic.model.Post
 import com.fsyy.listener.logic.model.TreeHole
 import com.fsyy.listener.logic.network.Network
@@ -17,24 +19,28 @@ import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.SoftKeyboardUtils
 import com.fsyy.listener.utils.extension.showToast
 import com.fsyy.listener.utils.extension.toComment
+import com.fsyy.listener.utils.extension.toInnerComment
 import com.fsyy.listener.utils.extension.valuesOfAVObject
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlinx.android.synthetic.main.fragment_encounter.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var adapter: DetailAdapter
     private val viewModel by lazy { ViewModelProvider(this).get(DetailViewModel::class.java) }
-    private val limit=10
+    private val limit=2
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
         LogUtils.e("Detail：intent.get()是${intent.getSerializableExtra("post") as Post}")
         viewModel.post=intent.getSerializableExtra("post") as Post
         LogUtils.e(viewModel.post.toString())
-        loadComment()
+        if (viewModel.post.commentCount>0){
+            loadComment()
+        }
         initObserver()
         initAdapter()
         initRecyclerView()
@@ -42,26 +48,55 @@ class DetailActivity : AppCompatActivity() {
         refreshData()
     }
     private fun initObserver(){
-        viewModel.commentLiveData.observe(this){
-            val commentAVList=it.getOrNull()
-            detail_swipe_refresh.isRefreshing=false
-            LogUtils.e("评论的size大小是${commentAVList?.size?:0}")
-            if(commentAVList!=null){
+//        viewModel.commentLiveData.observe(this){
+//            val commentAVList=it.getOrNull()
+//            LogUtils.e("评论的size大小是${commentAVList?.size?:0}")
+//            if(commentAVList!=null){
+//                for(avObject in commentAVList){
+//                    viewModel.dataList.add(avObject.toComment())
+//                }
+//                viewModel.loadLikes(commentAVList)
+//            }
+//        }
+        viewModel.allCommentsLiveData.observe(this){
+            val allComments=it.getOrNull()
+            if(allComments!=null){
+                val commentAVList=allComments.commentList
+                val innerCommentAVList=allComments.innerCommentList
+                //TODO 加载comment，将innerCmmentList数据加入到Comment类中，加载like
                 for(avObject in commentAVList){
                     viewModel.dataList.add(avObject.toComment())
                 }
-//                adapter.notifyDataSetChanged()
                 viewModel.loadLikes(commentAVList)
+                val innerCommentList=ArrayList<InnerComment>()
+                for(avObject in innerCommentAVList){
+                    innerCommentList.add(avObject.toInnerComment())
+                }
+                for(innerComment in innerCommentList){
+                    val floor=innerComment.floor
+                    val range=1 until viewModel.dataList.size
+                    for(i in range){
+                        val comment=viewModel.dataList[i] as Comment
+                        if(comment.floor==floor){
+                            //todo 这里的comment是viewmodel.dataList[i]么？因为已经强制转化了，是引用传递么
+                            comment.innerCommentList.add(innerComment)
+                            break
+                        }
+                    }
+                }
+
             }
         }
         viewModel.likesLiveData.observe(this){
             val likes=it.getOrNull()
+            detail_swipe_refresh.isRefreshing=false
             if(likes!=null){
                 //根据objectId，查询对应的comment，就将它的isLike设置为true
+                val startPos=limit*viewModel.loadCountLiveData.value!!+1
+                val range= startPos until viewModel.dataList.size
                 for(like in likes){
                     val commentId=like.getAVObject<AVObject>("comment").objectId
                     //todo 将这里的范围根据loadCount重新设置，adapter的时候，就可以只notifyItemRangeChanged
-                    val range= limit*viewModel.loadCountLiveData.value!!+1 until viewModel.dataList.size
 
                     for(i in range){
                         if(commentId==viewModel.dataList[i].objectId){
@@ -70,7 +105,7 @@ class DetailActivity : AppCompatActivity() {
                         }
                     }
                 }
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemRangeChanged(startPos,viewModel.dataList.size-startPos)
             }
         }
 
@@ -97,9 +132,11 @@ class DetailActivity : AppCompatActivity() {
         }
     }
     private fun loadComment(){
+        LogUtils.e("loadComment()中的loadCount是0")
         viewModel.loadComment(limit,viewModel.post.objectId,0)
     }
     private fun loadMoreComment(){
+        LogUtils.e("加载更多评论")
         viewModel.plusLoadCount()
         viewModel.loadComment(limit,viewModel.post.objectId,viewModel.loadCountLiveData.value!!)
     }
@@ -156,12 +193,21 @@ class DetailActivity : AppCompatActivity() {
     }
     private fun initRecyclerView(){
         detail_recyclerview.addOnScrollListener(object :RecyclerView.OnScrollListener(){
+            var isPullUp=false
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 val layoutManager=recyclerView.layoutManager as LinearLayoutManager
                 val lastVisiblePos=layoutManager.findLastVisibleItemPosition()
-                if(newState==RecyclerView.SCROLL_STATE_IDLE&&lastVisiblePos+1==viewModel.dataList.size
+                if(newState==RecyclerView.SCROLL_STATE_IDLE&&lastVisiblePos+1==viewModel.dataList.size&&isPullUp
                     &&viewModel.dataList.size==(viewModel.loadCountLiveData.value!!+1)*limit +1){
+                    LogUtils.e("执行上拉加载更多")
                     loadMoreComment()
+                }
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                LogUtils.e("dy=$dy,touchslop=${ViewConfiguration.get(this@DetailActivity).scaledTouchSlop}")
+                if(dy<-ViewConfiguration.get(this@DetailActivity).scaledTouchSlop){
+                    isPullUp=true
                 }
             }
         })
@@ -170,6 +216,7 @@ class DetailActivity : AppCompatActivity() {
     }
     private fun initListener(){
         detail_swipe_refresh.setOnRefreshListener {
+            LogUtils.e("下拉刷新了")
             refreshData()
         }
         detail_submit.setOnClickListener {
@@ -178,9 +225,11 @@ class DetailActivity : AppCompatActivity() {
     }
     private fun refreshData(){
         //todo 这里应该是刷新整个页面并且替换当前intent获得的AVObject
+
         viewModel.dataList.clear()
         viewModel.dataList.add(viewModel.post)
         viewModel.clearLoadCount()
+        LogUtils.e("执行refreshData()")
         loadComment()
         detail_swipe_refresh.isRefreshing=true
     }
