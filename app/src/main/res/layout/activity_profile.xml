@@ -52,6 +52,7 @@
         android:layout_marginEnd="@dimen/outer_padding"
         android:layout_marginTop="10dp">
         <TextView
+            android:id="@+id/profile_username_prefix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -69,15 +70,18 @@
             android:layout_marginEnd="@dimen/inner_padding"/>
         <TextView
             android:id="@+id/profile_username_text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/profile_username_go"
+            android:layout_toEndOf="@id/profile_username_prefix"
             android:layout_marginEnd="@dimen/inner_padding"
             android:textSize="@dimen/commonTextSize"
             android:textColor="@color/grayTextColor"
             android:text="@string/personal_userName"
-            android:maxLength="8"/>
+            android:gravity="end"
+            android:singleLine="true"
+            android:ellipsize="end"/>
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/profile_sign_layout"
@@ -88,6 +92,7 @@
         android:layout_marginEnd="@dimen/outer_padding"
         android:layout_marginTop="10dp">
         <TextView
+            android:id="@+id/profile_sign_prefix"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -109,10 +114,13 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/profile_sign_go"
+            android:layout_toEndOf="@id/profile_sign_prefix"
             android:layout_marginEnd="@dimen/inner_padding"
             android:textSize="@dimen/commonTextSize"
             android:textColor="@color/grayTextColor"
             android:text="@string/personal_signature"
-            android:ellipsize="end"/>
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:gravity="end"/>
     </RelativeLayout>
 </LinearLayout>

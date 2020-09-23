@@ -2,6 +2,7 @@ package com.fsyy.listener.logic.network
 
 import cn.leancloud.AVObject
 import cn.leancloud.AVQuery
+import cn.leancloud.AVUser
 import com.fsyy.listener.R
 import com.fsyy.listener.ui.MyApplication
 import com.fsyy.listener.utils.LogUtils
@@ -29,7 +30,7 @@ object Network {
     suspend fun fetchNewPost(postId:String)=AVObject.createWithoutData("Post",postId).fetchNew()
     suspend fun fetchNewComment(commentId:String)=AVObject.createWithoutData("Comment",commentId).fetchNew()
     fun publishComment(map: Map<String, Any?>, success: (avObject: AVObject) -> Unit)=CommentService.genComment(map).saveAV(success)
-
+    suspend fun fetchCurrentUser()=AVUser.currentUser().fetchNew()
 
     private suspend fun AVQuery<AVObject>.queryAV():List<AVObject>{
         LogUtils.e("执行Network的queryAV")

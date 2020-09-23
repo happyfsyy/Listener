@@ -21,7 +21,9 @@
         app:layout_constraintStart_toEndOf="@id/post_photo"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="@dimen/inner_padding"
-        android:textSize="@dimen/commonTextSizeSmall"/>
+        android:textSize="@dimen/commonTextSizeSmall"
+        android:ellipsize="end"
+        android:singleLine="true"/>
     <TextView
         android:id="@+id/post_content"
         android:layout_width="match_parent"

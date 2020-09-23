@@ -2,7 +2,6 @@ package com.fsyy.listener.logic.network
 
 import cn.leancloud.AVObject
 import cn.leancloud.AVQuery
-import cn.leancloud.AVUser
 import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.extension.valuesOfAVObject
 

@@ -2,8 +2,6 @@ package com.fsyy.listener.ui.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.view.ViewConfiguration
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,24 +13,18 @@ import com.fsyy.listener.logic.model.Comment
 import com.fsyy.listener.logic.model.InnerComment
 import com.fsyy.listener.logic.model.Post
 import com.fsyy.listener.logic.model.TreeHole
-import com.fsyy.listener.logic.network.Network
 import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.SoftKeyboardUtils
 import com.fsyy.listener.utils.extension.showToast
 import com.fsyy.listener.utils.extension.toComment
 import com.fsyy.listener.utils.extension.toInnerComment
-import com.fsyy.listener.utils.extension.valuesOfAVObject
-import io.reactivex.Observer
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.fragment_encounter.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var adapter: DetailAdapter
     private val viewModel by lazy { ViewModelProvider(this).get(DetailViewModel::class.java) }
-    private val limit=2
+    private val limit=10
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -289,11 +281,16 @@ class DetailActivity : AppCompatActivity() {
         }
         detail_submit.setOnClickListener {
             //todo 提交的时候，获取最新的comment
-            if(viewModel.floorLiveData.value==0) {
-                viewModel.fetchNewPost(viewModel.post.objectId)
-            }else {
-                val comment=viewModel.dataList[viewModel.floorLiveData.value!!]
-                viewModel.fetchNewComment(comment.objectId)
+            val content=detail_edit.text.toString().trim()
+            if(content!=""){
+                if(viewModel.floorLiveData.value==0) {
+                    viewModel.fetchNewPost(viewModel.post.objectId)
+                }else {
+                    val comment=viewModel.dataList[viewModel.floorLiveData.value!!]
+                    viewModel.fetchNewComment(comment.objectId)
+                }
+            }else{
+                getString(R.string.edit_content_toast).showToast()
             }
         }
     }

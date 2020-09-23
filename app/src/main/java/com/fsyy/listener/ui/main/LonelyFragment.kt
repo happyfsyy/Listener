@@ -85,6 +85,10 @@ class LonelyFragment : Fragment(),View.OnClickListener{
     private fun submit(){
         val content=lonely_content.text.toString().trim()
         val tag=lonely_tag.text.toString().trim()
+        if(content==""){
+            getString(R.string.edit_content_toast).showToast()
+            return
+        }
         viewModel.publishPost(mapOf("author" to AVUser.currentUser(),
             "content" to content,"tag" to tag,"type" to viewModel.type.value)){
             LogUtils.e(it.toJSONString())

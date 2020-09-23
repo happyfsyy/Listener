@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:gravity="bottom"
+    android:paddingStart="@dimen/outer_padding"
+    android:paddingEnd="@dimen/outer_padding">
+    <Button
+        android:id="@+id/profile_takePhoto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/inner_padding_top"
+        android:text="@string/popup_take_photo"
+        android:textSize="@dimen/commonTextSize"
+        android:background="@drawable/personal_item_bg"
+        android:layout_marginBottom="@dimen/inner_padding"/>
+    <Button
+        android:id="@+id/profile_albums"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/inner_padding_top"
+        android:text="@string/popup_albums"
+        android:textSize="@dimen/commonTextSize"
+        android:background="@drawable/personal_item_bg"
+        android:layout_marginBottom="@dimen/inner_padding"/>
+    <Button
+        android:id="@+id/profile_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/inner_padding"
+        android:text="@string/cancel"
+        android:layout_marginBottom="@dimen/inner_padding"
+        android:textSize="@dimen/commonTextSize"
+        android:background="@drawable/personal_item_bg" />
+</LinearLayout>

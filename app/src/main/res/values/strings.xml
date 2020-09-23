@@ -49,4 +49,14 @@
     <string name="feedback_submit">提交</string>
     <string name="comment_inner_more">查看更多></string>
     <string name="detail_edit_hint">回复@%s:</string>
+    <string name="edit_content_toast">内容不可以为空</string>
+    <string name="profile_edit_username">更新昵称</string>
+    <string name="profile_edit_sign">更新签名</string>
+    <string name="dialog_confirm">确定</string>
+    <string name="dialog_cancel">取消</string>
+    <string name="profile_username_toast">昵称不可以为空</string>
+    <string name="profile_sign_toast">签名不可以为空</string>
+    <string name="popup_take_photo">拍一张</string>
+    <string name="popup_albums">从手机相册选择</string>
+    <string name="cancel">取消</string>
 </resources>

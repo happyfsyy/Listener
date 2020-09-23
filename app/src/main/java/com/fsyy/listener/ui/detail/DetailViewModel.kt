@@ -1,6 +1,5 @@
 package com.fsyy.listener.ui.detail
 
-import android.view.animation.Transformation
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -12,7 +11,6 @@ import com.fsyy.listener.logic.model.InnerCommentParams
 import com.fsyy.listener.logic.model.Post
 import com.fsyy.listener.logic.model.TreeHole
 import com.fsyy.listener.logic.network.Network
-import com.fsyy.listener.utils.LogUtils
 
 class DetailViewModel:ViewModel() {
     val dataList=ArrayList<TreeHole>()

@@ -60,6 +60,11 @@ object Repository {
         Result.success(response)
     }
 
+    fun fetchCurrentUser()= query(Dispatchers.Main){
+        val response=Network.fetchCurrentUser()
+        Result.success(response)
+    }
+
     /**
      * 这里只是简化了方法，并且对查询结果进行了LiveData的包装
      */

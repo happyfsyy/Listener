@@ -11,17 +11,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.leancloud.AVObject
-import cn.leancloud.AVQuery
 import cn.leancloud.AVUser
 import com.fsyy.listener.R
-import com.fsyy.listener.logic.model.Post
 import com.fsyy.listener.ui.detail.DetailActivity
 import com.fsyy.listener.utils.extension.toPost
 import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.extension.startActivity
-import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.fragment_encounter.*
-import retrofit2.http.POST
 
 class EncounterFragment : Fragment() {
     private lateinit var viewModel: EncounterViewModel
