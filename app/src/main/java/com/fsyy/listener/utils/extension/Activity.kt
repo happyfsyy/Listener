@@ -12,3 +12,8 @@ inline fun <reified T> Activity.startActivity(block:Intent.()->Unit){
     intent.block()
     startActivity(intent)
 }
+inline fun <reified T> Activity.startActivityForResult(requestCode:Int,noinline block: (Intent.() -> Unit)?=null){
+    val intent=Intent(this,T::class.java)
+    block?.let { intent.it() }
+    startActivityForResult(intent,requestCode)
+}

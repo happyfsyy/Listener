@@ -59,4 +59,5 @@
     <string name="popup_take_photo">拍一张</string>
     <string name="popup_albums">从手机相册选择</string>
     <string name="cancel">取消</string>
+    <string name="write_external_denied">您禁止了权限</string>
 </resources>

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <com.fsyy.listener.ui.viewgroup.TitleLayout
-        android:id="@+id/feedback"
+        android:id="@+id/feedback_header"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:titleText="@string/feedback_title" />
@@ -18,10 +18,11 @@
         android:textColor="@color/textColor"
         android:text="@string/feedback_question_header" />
     <EditText
+        android:id="@+id/feedback_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minLines="5"
-        android:maxLines="5"
+        android:maxLines="10"
         android:layout_margin="@dimen/outer_padding"
         android:background="@drawable/lonely_item_bg"
         android:padding="@dimen/inner_padding_top"
@@ -43,6 +44,7 @@
         android:background="@drawable/lonely_item_bg"
         android:layout_margin="@dimen/outer_padding">
         <ImageView
+            android:id="@+id/feedback_img1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@color/grayTextColor"
@@ -50,21 +52,26 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/inner_padding"/>
         <ImageView
+            android:id="@+id/feedback_img2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@color/grayTextColor"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="@dimen/inner_padding" />
+            android:layout_margin="@dimen/inner_padding"
+            android:visibility="gone"/>
         <ImageView
+            android:id="@+id/feedback_img3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@color/grayTextColor"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="@dimen/inner_padding"/>
+            android:layout_margin="@dimen/inner_padding"
+            android:visibility="gone"/>
     </LinearLayout>
     <Button
+        android:id="@+id/feedback_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/inner_padding_top"
@@ -74,6 +81,5 @@
         android:layout_marginEnd="@dimen/inner_padding"
         android:background="@drawable/personal_item_bg"
         android:layout_marginTop="@dimen/outer_padding"
-        android:textSize="@dimen/commonTextSizeBig"
-        />
+        android:textSize="@dimen/commonTextSizeBig" />
 </LinearLayout>

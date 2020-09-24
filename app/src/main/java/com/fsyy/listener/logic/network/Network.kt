@@ -1,5 +1,6 @@
 package com.fsyy.listener.logic.network
 
+import cn.leancloud.AVFile
 import cn.leancloud.AVObject
 import cn.leancloud.AVQuery
 import cn.leancloud.AVUser
@@ -30,7 +31,9 @@ object Network {
     suspend fun fetchNewPost(postId:String)=AVObject.createWithoutData("Post",postId).fetchNew()
     suspend fun fetchNewComment(commentId:String)=AVObject.createWithoutData("Comment",commentId).fetchNew()
     fun publishComment(map: Map<String, Any?>, success: (avObject: AVObject) -> Unit)=CommentService.genComment(map).saveAV(success)
-    suspend fun fetchCurrentUser()=AVUser.currentUser().fetchNew()
+    suspend fun fetchCurrentUser()=AVUser.currentUser().fetchNew("username,intro,photoUrl")
+
+    fun uploadImage(path:String,success:(avFile:AVFile)->Unit)=AVFile.withAbsoluteLocalPath("image.jpg",path).saveAVFile(success)
 
     private suspend fun AVQuery<AVObject>.queryAV():List<AVObject>{
         LogUtils.e("执行Network的queryAV")
@@ -64,9 +67,9 @@ object Network {
         override fun onComplete() {
         }
     })
-    private suspend fun AVObject.fetchNew():AVObject{
+    private suspend fun AVObject.fetchNew(keys:String?=null):AVObject{
         return suspendCoroutine {
-            fetchInBackground().subscribe(object:Observer<AVObject>{
+            fetchInBackground(keys).subscribe(object:Observer<AVObject>{
                 override fun onSubscribe(d: Disposable) {
                 }
                 override fun onNext(t: AVObject) {
@@ -80,4 +83,19 @@ object Network {
             })
         }
     }
+    private fun AVFile.saveAVFile(success: (avFile: AVFile) -> Unit)=saveInBackground().subscribe(
+        object : Observer<AVFile> {
+            override fun onSubscribe(d: Disposable) {
+            }
+            override fun onNext(t: AVFile) {
+                success(t)
+            }
+            override fun onError(e: Throwable) {
+                MyApplication.context.resources.getString(R.string.failure_text).showToast()
+                LogUtils.e("我来看看异常在哪$e")
+                e.printStackTrace()
+            }
+            override fun onComplete() {
+            }
+        })
 }
