@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.fsyy.listener.R
+import com.fsyy.listener.ui.homepage.HomePageActivity
 import com.fsyy.listener.ui.settings.FeedbackActivity
 import com.fsyy.listener.ui.settings.ProfileActivity
 import com.fsyy.listener.utils.LogUtils
@@ -60,6 +61,7 @@ class PersonalFragment:Fragment(),View.OnClickListener{
     }
     private fun initListener(){
         personal_user_layout.setOnClickListener(this)
+        personal_index_layout.setOnClickListener(this)
         personal_feedback_layout.setOnClickListener(this)
     }
     private fun initObserver(){
@@ -75,6 +77,7 @@ class PersonalFragment:Fragment(),View.OnClickListener{
     override fun onClick(v: View?) {
         when(v?.id){
             personal_user_layout.id->startActivityForResult<ProfileActivity>(PROFILE)
+            personal_index_layout.id->activity?.startActivity<HomePageActivity>()
             personal_feedback_layout.id->activity?.startActivity<FeedbackActivity>()
         }
     }

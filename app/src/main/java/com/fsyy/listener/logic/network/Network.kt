@@ -10,6 +10,7 @@ import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.extension.showToast
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
+import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -33,7 +34,8 @@ object Network {
     fun publishComment(map: Map<String, Any?>, success: (avObject: AVObject) -> Unit)=CommentService.genComment(map).saveAV(success)
     suspend fun fetchCurrentUser()=AVUser.currentUser().fetchNew("username,intro,photoUrl")
 
-    fun uploadImage(path:String,success:(avFile:AVFile)->Unit)=AVFile.withAbsoluteLocalPath("image.jpg",path).saveAVFile(success)
+    fun uploadPhoto(path:String,success:(avObject:AVObject)->Unit)=AVFile.withAbsoluteLocalPath("image.jpg",path).saveAV(success)
+    suspend fun uploadImage(path:String)= AVFile("image.jpg",File(path)).saveAVFile()
 
     private suspend fun AVQuery<AVObject>.queryAV():List<AVObject>{
         LogUtils.e("执行Network的queryAV")
@@ -46,6 +48,25 @@ object Network {
                 }
                 override fun onError(e: Throwable) {
                     //todo 当前网络状况不佳，异常也可以这里处理，但是就变成和回调一样了
+                    it.resumeWithException(e)
+                }
+                override fun onComplete() {
+                }
+            })
+        }
+    }
+    private fun createAVFile(path:String):AVFile{
+        return AVFile.withAbsoluteLocalPath("image.jpg",path)
+    }
+    private suspend fun AVFile.saveAVFile():AVFile{
+        return suspendCoroutine<AVFile>{
+            saveInBackground().subscribe(object : Observer<AVFile> {
+                override fun onSubscribe(d: Disposable) {
+                }
+                override fun onNext(t: AVFile) {
+                    it.resume(t)
+                }
+                override fun onError(e: Throwable) {
                     it.resumeWithException(e)
                 }
                 override fun onComplete() {
@@ -83,19 +104,4 @@ object Network {
             })
         }
     }
-    private fun AVFile.saveAVFile(success: (avFile: AVFile) -> Unit)=saveInBackground().subscribe(
-        object : Observer<AVFile> {
-            override fun onSubscribe(d: Disposable) {
-            }
-            override fun onNext(t: AVFile) {
-                success(t)
-            }
-            override fun onError(e: Throwable) {
-                MyApplication.context.resources.getString(R.string.failure_text).showToast()
-                LogUtils.e("我来看看异常在哪$e")
-                e.printStackTrace()
-            }
-            override fun onComplete() {
-            }
-        })
 }

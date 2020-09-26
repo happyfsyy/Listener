@@ -16,7 +16,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="lonely_open_hint">世界那么大，总有可以与你产生情感共鸣的人…</string>
     <string name="lonely_private_hint">总有一些话我们说不出口，即使对最亲近的人也无法诉说…</string>
-    <string name="lonely_buried_hint">我只是个树洞，我不说话，但我会保存你的话…</string>
+    <string name="lonely_buried_hint">我只是个树洞，我不说话，但我会保存你说的话…</string>
     <string name="lonely_submit_success">发布成功了，快去看看吧</string>
     <string name="lonely_tags">标签：</string>
     <string name="lonely_tag">如：工作烦恼</string>

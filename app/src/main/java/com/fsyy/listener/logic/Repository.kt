@@ -11,6 +11,7 @@ import com.fsyy.listener.utils.extension.showToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
@@ -63,6 +64,23 @@ object Repository {
     fun fetchCurrentUser()= query(Dispatchers.Main){
         val response=Network.fetchCurrentUser()
         Result.success(response)
+    }
+
+    fun uploadImages(pathList: ArrayList<String>)= query(Dispatchers.Main){
+        val imgUrls=ArrayList<String>()
+        val start=System.currentTimeMillis()
+        coroutineScope {
+            for(path in pathList){
+                launch {
+                    val avFile= path.let { async { Network.uploadImage(it) }.await() }
+                    val imgUrl=avFile.url
+                    imgUrls.add(imgUrl)
+                }
+            }
+        }
+        val end=System.currentTimeMillis()
+        LogUtils.e("imgUrls的大小是${imgUrls.size},耗时${end-start}毫秒")
+        Result.success(imgUrls)
     }
 
     /**

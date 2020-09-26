@@ -31,7 +31,7 @@
         <activity android:name=".ui.message.MessageActivity" />
         <activity android:name=".ui.settings.FeedbackActivity" android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".ui.privacy.PrivateActivity" />
-        <activity android:name=".ui.homepage.HomePageActivity" />
+        <activity android:name=".ui.homepage.HomePageActivity" android:theme="@style/NoStatusBarTheme"/>
         <activity
             android:name=".ui.detail.DetailActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" />

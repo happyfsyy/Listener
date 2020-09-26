@@ -179,10 +179,10 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
                     LogUtils.e("uri得到的path是${viewModel.imageUri.path}")
                     LogUtils.e("我根据file获得本地路径是${viewModel.outputImage.absolutePath}")
                     LogUtils.e("工具类的绝对路径是${Uri2PathUtil.getImageRealPathFromContentUri(viewModel.imageUri)}")
-                    viewModel.uploadImage(viewModel.outputImage.absolutePath) {
+                    viewModel.uploadPhoto(viewModel.outputImage.absolutePath) {
                         LogUtils.e("我上传图片成功了，你敢信")
                         //todo 在这里进行AVUser.save的回调，在回调完成之后，才把图片加载到view之中，并且让进度条消失
-                        savePhoto(it)
+                        savePhoto(it as AVFile)
                         //todo 在这里setResult
                     }
                 }
@@ -207,9 +207,9 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
 
                             }
                         }
-                        viewModel.uploadImage(Uri2PathUtil.getImageRealPathFromContentUri(it)!!){avfile->
+                        viewModel.uploadPhoto(Uri2PathUtil.getImageRealPathFromContentUri(it)!!){avObject->
                             LogUtils.e("上传图片成功了。。。。")
-                            savePhoto(avfile)
+                            savePhoto(avObject as AVFile)
                             //todo setResult
                         }
                     }

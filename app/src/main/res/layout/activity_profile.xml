@@ -15,8 +15,7 @@
         android:layout_height="50dp"
         android:background="@drawable/personal_item_bg"
         android:layout_marginStart="@dimen/outer_padding"
-        android:layout_marginEnd="@dimen/outer_padding"
-        android:layout_marginTop="20dp">
+        android:layout_marginEnd="@dimen/outer_padding">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

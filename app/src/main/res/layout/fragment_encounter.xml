@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/backgroundColor">
     <RelativeLayout
         android:id="@+id/encounter_header"
         android:layout_width="match_parent"
@@ -28,15 +29,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/encounter_header"
-        android:paddingStart="@dimen/outer_padding"
-        android:paddingEnd="@dimen/outer_padding"
-        android:background="@color/backgroundColor">
+        android:layout_marginTop="@dimen/inner_padding">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/encounter_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
             android:scrollbarThumbVertical="@color/scrollbarColor"
-            android:scrollbarSize="3dp" />
+            android:scrollbarSize="3dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:paddingStart="@dimen/outer_padding"
+            android:paddingEnd="@dimen/outer_padding"
+            />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </RelativeLayout>

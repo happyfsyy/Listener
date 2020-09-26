@@ -12,7 +12,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/big_margin_top"
         android:layout_marginStart="@dimen/outer_padding"
         android:textSize="@dimen/commonTextSize"
         android:textColor="@color/textColor"
@@ -47,28 +46,31 @@
             android:id="@+id/feedback_img1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/grayTextColor"
+            android:background="@color/backgroundColor"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:layout_margin="@dimen/inner_padding"/>
+            android:layout_margin="@dimen/inner_padding"
+            android:scaleType="centerCrop"/>
         <ImageView
             android:id="@+id/feedback_img2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/grayTextColor"
+            android:background="@color/backgroundColor"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/inner_padding"
-            android:visibility="gone"/>
+            android:visibility="invisible"
+            android:scaleType="centerCrop"/>
         <ImageView
             android:id="@+id/feedback_img3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:background="@color/grayTextColor"
+            android:background="@color/backgroundColor"
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/inner_padding"
-            android:visibility="gone"/>
+            android:visibility="invisible"
+            android:scaleType="centerCrop"/>
     </LinearLayout>
     <Button
         android:id="@+id/feedback_submit"
