@@ -4,6 +4,7 @@ import java.io.Serializable
 import java.util.*
 
 /**
+ * 帖子，为EncounterFragment和PostDetail设计
  * 这里的post并不对应服务器数据库中的post，只是在本地数据库方便使用
  * 对应的是界面上的元素
  */

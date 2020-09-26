@@ -6,4 +6,6 @@
         <attr name="titleText" format="string"/>
         <attr name="android:letterSpacing"/>
     </declare-styleable>
+    <declare-styleable name="PostItemView">
+    </declare-styleable>
 </resources>

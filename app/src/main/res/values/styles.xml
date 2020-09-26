@@ -38,4 +38,8 @@
         <item name="android:windowEnterAnimation">@anim/popup_in</item>
         <item name="android:windowExitAnimation">@anim/popup_out</item>
     </style>
+    <style name="CollapsingTitleTextStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/titleSize</item>
+        <item name="android:textColor">@color/textColor</item>
+    </style>
 </resources>

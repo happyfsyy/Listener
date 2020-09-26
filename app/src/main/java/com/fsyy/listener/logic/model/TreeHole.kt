@@ -5,6 +5,8 @@ import java.util.*
 
 /**
  * 作为Post和Comment的父类，只是简单的将公因子提取出来
+ * @see Post
+ * @see Comment
  * @param objectId 是Post和Comment各自的objectId
  * @param date 是createdDate，显示Post和Comment的创建时间
  * @param type 只有两种选择，分别是POST和COMMENT

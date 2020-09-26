@@ -72,5 +72,13 @@
         android:paddingEnd="@dimen/inner_padding"
         android:paddingTop="@dimen/inner_padding_top"
         android:paddingBottom="@dimen/inner_padding_top">
+        <TextView
+            android:id="@+id/comment_inner_post_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/commonTextSize"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:visibility="gone"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

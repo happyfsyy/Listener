@@ -169,7 +169,6 @@ class EncounterFragment : Fragment() {
             }
         }else{
             LogUtils.e("我要删除，但是post.likeObjectId却是${post.likeObjectId}")
-            //TODO 我得去获取post的likeObjectId
 
             val like=AVObject.createWithoutData("Like",post.likeObjectId)
             like.deleteEventually()
