@@ -23,4 +23,16 @@ object PostService {
         skip(limitNum*loadCount)
     }
     fun genPost(map: Map<String,Any?>)= valuesOfAVObject("Post",map)
+
+    /**
+     * 查询所有的帖子数量
+     */
+    fun genAllPostCountQuery(userId:String)=AVQuery<AVObject>("Post").apply {
+        whereEqualTo("author",AVObject.createWithoutData("_User",userId))
+    }
+    fun genRecentPostQuery(userId: String)=AVQuery<AVObject>("Post").apply {
+        include("author")
+        limit=3
+        orderByDescending("createdAt")
+    }
 }

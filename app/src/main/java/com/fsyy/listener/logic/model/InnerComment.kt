@@ -10,5 +10,5 @@ import java.util.*
  */
 class InnerComment(objectId:String,fromUserId:String,fromUserName:String,val toUserName:String,content:String,date:Date,
                    val floor:Int,val innerFloor:Int,
-                   likeCount:Int=0,isLike:Boolean=false,likeObjectId:String="")
+                   val isInner:Boolean=true,likeCount:Int=0,isLike:Boolean=false,likeObjectId:String="")
     :TreeHole(objectId ,fromUserId ,fromUserName,content,date, INNER_COMMENT,likeCount ,isLike ,likeObjectId)

@@ -32,11 +32,33 @@ object Network {
     suspend fun fetchNewPost(postId:String)=AVObject.createWithoutData("Post",postId).fetchNew()
     suspend fun fetchNewComment(commentId:String)=AVObject.createWithoutData("Comment",commentId).fetchNew()
     fun publishComment(map: Map<String, Any?>, success: (avObject: AVObject) -> Unit)=CommentService.genComment(map).saveAV(success)
-    suspend fun fetchCurrentUser()=AVUser.currentUser().fetchNew("username,intro,photoUrl")
+    suspend fun fetchCurrentUser()=AVUser.currentUser().fetchNew()
 
     fun uploadPhoto(path:String,success:(avObject:AVObject)->Unit)=AVFile.withAbsoluteLocalPath("image.jpg",path).saveAV(success)
     suspend fun uploadImage(path:String)= AVFile("image.jpg",File(path)).saveAVFile()
 
+    suspend fun getCommentCount(objectId: String)=CommentService.genAllCommentCountQuery(objectId).countQuery()
+    suspend fun loadRecentComments(objectId: String)=CommentService.genRecentCommentQuery(objectId).queryAV()
+    suspend fun getPostCount(objectId: String)=PostService.genAllPostCountQuery(objectId).countQuery()
+    suspend fun loadRecentPosts(objectId: String)=PostService.genRecentPostQuery(objectId).queryAV()
+
+    private suspend fun AVQuery<AVObject>.countQuery():Int{
+        LogUtils.e("执行数量查询")
+        return suspendCoroutine {
+            countInBackground().subscribe(object : Observer<Int> {
+                override fun onSubscribe(d: Disposable) {
+                }
+                override fun onNext(t: Int) {
+                    it.resume(t)
+                }
+                override fun onError(e: Throwable) {
+                    it.resumeWithException(e)
+                }
+                override fun onComplete() {
+                }
+            })
+        }
+    }
     private suspend fun AVQuery<AVObject>.queryAV():List<AVObject>{
         LogUtils.e("执行Network的queryAV")
         return suspendCoroutine<List<AVObject>>{
@@ -54,9 +76,6 @@ object Network {
                 }
             })
         }
-    }
-    private fun createAVFile(path:String):AVFile{
-        return AVFile.withAbsoluteLocalPath("image.jpg",path)
     }
     private suspend fun AVFile.saveAVFile():AVFile{
         return suspendCoroutine<AVFile>{

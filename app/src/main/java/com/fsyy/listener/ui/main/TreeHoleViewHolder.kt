@@ -26,4 +26,9 @@ class CommentViewHolder(itemView: View):TreeHoleViewHolder(itemView){
     val content:TextView=itemView.findViewById(R.id.comment_content)
     val date:TextView=itemView.findViewById(R.id.comment_date)
     val innerLayout:LinearLayout=itemView.findViewById(R.id.comment_inner_layout)
+    val innerText:TextView=itemView.findViewById(R.id.comment_inner_content)
+}
+class HeaderViewHolder(itemView: View):TreeHoleViewHolder(itemView){
+    val headerText:TextView=itemView.findViewById(R.id.home_header_text)
+    val headerNum:TextView=itemView.findViewById(R.id.home_header_num)
 }

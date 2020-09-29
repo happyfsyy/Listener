@@ -100,6 +100,7 @@ class DetailAdapter(private val list:List<TreeHole>,private val context: Context
                     }
                 }
             }
+            //todo 少写一个viewHolder
         }
     }
 

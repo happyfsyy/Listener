@@ -2,6 +2,7 @@ package com.fsyy.listener.logic.network
 
 import cn.leancloud.AVObject
 import cn.leancloud.AVQuery
+import cn.leancloud.AVUser
 import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.extension.valuesOfAVObject
 
@@ -48,5 +49,23 @@ object CommentService {
         include("fromAuthor")
         include("toAuthor")
         orderByAscending("innerFloor")
+    }
+
+    /**
+     * 查询评论数量
+     */
+    fun genAllCommentCountQuery(userId: String)=AVQuery<AVObject>("Comment").apply {
+        whereEqualTo("fromAuthor",AVObject.createWithoutData("_User",userId))
+    }
+    /**
+     * @param userId 目标用户的userId，不是当前用户的userId
+     * 查询userId的用户最近的三条评论
+     */
+    fun genRecentCommentQuery(userId:String)=AVQuery<AVObject>("Comment").apply {
+        whereEqualTo("fromAuthor",AVObject.createWithoutData("_User",userId))
+        include("fromAuthor")
+        include("post")
+        limit=3
+        orderByDescending("createdAt")
     }
 }

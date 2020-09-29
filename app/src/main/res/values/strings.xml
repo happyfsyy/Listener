@@ -63,9 +63,12 @@
     <string name="home_send_energy">送出能量</string>
     <string name="home_get_energy">获得能量</string>
     <string name="home_get_likes">收到点赞</string>
-    <string name="home_post_prefix_my">我的帖子</string>
-    <string name="home_post_prefix_his">他的帖子</string>
-    <string name="home_comment_prefix_my">我的回复</string>
-    <string name="home_comment_prefix_his">他的回复</string>
-    <string name="home_post_num">%d条</string>
+    <string name="home_post_header_my">我的帖子</string>
+    <string name="home_post_header_his">他的帖子</string>
+    <string name="home_comment_header_my">我的回复</string>
+    <string name="home_comment_header_his">他的回复</string>
+    <string name="home_header_num">%d条</string>
+    <string name="home_private_msg">私信</string>
+    <string name="home_comment_inner_text1">回复了帖子：%s</string>
+    <string name="home_comment_inner_text2">回复了评论：%s</string>
 </resources>
