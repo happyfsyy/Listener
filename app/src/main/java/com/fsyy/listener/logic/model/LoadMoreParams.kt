@@ -12,4 +12,9 @@ data class PostLoadMoreParams(val limit: Int,val loadCount:Int)
  */
 data class CommentLoadMoreParams(val objectId:String,val limit: Int,val loadCount: Int)
 
+/**
+ * 为了DetailActivity界面设计的,为了加载某一层Comment的所有InnerComment
+ * @param objectId 帖子的objectId
+ * @param floor 评论所在的楼层
+ */
 data class InnerCommentParams(val objectId: String,val floor:Int)

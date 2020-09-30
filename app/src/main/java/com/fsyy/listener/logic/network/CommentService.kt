@@ -65,7 +65,16 @@ object CommentService {
         whereEqualTo("fromAuthor",AVObject.createWithoutData("_User",userId))
         include("fromAuthor")
         include("post")
+        include("post.author")
         limit=3
         orderByDescending("createdAt")
+    }
+    /**
+     * 根据InnerComment的floor查询对应的Comment，获得comment的内容
+     */
+    fun genCommentQuery(floor:Int,postObjectId:String)=AVQuery<AVObject>("Comment").apply {
+        whereEqualTo("floor",floor)
+        whereEqualTo("post",AVObject.createWithoutData("Post",postObjectId))
+        whereEqualTo("isInner",false)
     }
 }

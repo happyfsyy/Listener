@@ -51,6 +51,7 @@ class DetailActivity : AppCompatActivity() {
                 val commentAVList=allComments.commentList
                 val innerCommentAVList=allComments.innerCommentList
                 for(avObject in commentAVList){
+                    AVUser.createWithoutData("_User","objectId")
                     viewModel.dataList.add(avObject.toComment())
                 }
                 LogUtils.e("执行loadLikes方法前，datalist.size是${viewModel.dataList.size}")

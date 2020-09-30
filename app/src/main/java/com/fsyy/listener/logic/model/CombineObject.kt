@@ -11,4 +11,4 @@ class AllComments(val commentList:List<AVObject>,val innerCommentList:List<AVObj
 /**
  * 对应主页界面的所有数据，这几个查询可以并行同时查询
  */
-class AllHomeData(val commentCount:Int,val commentList: List<AVObject>,val postCount:Int,val postList: List<AVObject>)
+class AllHomeData(val user:AVUser,val commentCount:Int,val commentList: List<AVObject>,val postCount:Int,val postList: List<AVObject>)

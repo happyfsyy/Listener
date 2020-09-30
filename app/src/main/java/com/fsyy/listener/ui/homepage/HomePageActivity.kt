@@ -8,20 +8,32 @@ import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.LinearLayoutManager
+import cn.leancloud.AVObject
+import cn.leancloud.AVUser
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.fsyy.listener.R
+import com.fsyy.listener.logic.model.*
 import com.fsyy.listener.utils.LogUtils
+import com.fsyy.listener.utils.extension.toComment
+import com.fsyy.listener.utils.extension.toPost
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.activity_home_page.*
+import kotlinx.android.synthetic.main.home_header_data.*
 
 class HomePageActivity : AppCompatActivity() {
+    private lateinit var adapter: HomeAdapter
     private lateinit var viewModel: HomePageViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
         initParams()
-        initViews()
-        viewModel.userId=intent.getStringExtra("userId")!!
-        viewModel.getData(viewModel.userId)
+        setAdapter()
+        initGetData()
+        initListener()
     }
     private fun initParams(){
         LogUtils.e("collapsingToolbarLayout的高度是${home_collapsing_layout.height},toolbar的高度是${home_toolbar.height}")
@@ -30,10 +42,15 @@ class HomePageActivity : AppCompatActivity() {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowTitleEnabled(false)
         }
-        home_collapsing_layout.title="Ale246"
         viewModel=ViewModelProvider(this).get(HomePageViewModel::class.java)
     }
-    private fun initViews(){
+    private fun initGetData(){
+        //todo 显示进度条
+        viewModel.userId=intent.getStringExtra("userId")!!
+        viewModel.isCurrentUser = viewModel.userId==AVUser.currentUser().objectId
+        viewModel.getData(viewModel.userId)
+    }
+    private fun initAppBarListener(){
         home_appbar_layout.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
             override fun onStateChanged(appBarLayout: AppBarLayout, state: Int) {
                 when(state){
@@ -56,13 +73,110 @@ class HomePageActivity : AppCompatActivity() {
                 home_data_layout.alpha=(1-percent)*0.9f
             }
         })
+    }
+    private fun initObserver(){
         viewModel.allDataLiveData.observe(this){
             val result=it.getOrNull()
             if(result!=null){
-
+                //todo 更新头部数据，更新recyclerview数据
+                setHeaderData(result)
+                assembleDataList(result)
             }
         }
-
+        viewModel.likesLiveData.observe(this){
+            val result=it.getOrNull()
+            if(result!=null){
+                for(like in result){
+                    val postObjectId=like.getAVObject<AVObject>("post").objectId
+                    for(data in viewModel.dataList){
+                        if(data is Post &&postObjectId==data.objectId){
+                            data.isLike=true
+                            data.likeObjectId=like.objectId
+                        }else if(data is Comment && postObjectId==data.post?.objectId){
+                            data.post?.isLike=true
+                            data.post?.likeObjectId=like.objectId
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged()
+                home_progressbar.visibility=View.GONE
+            }
+        }
+        viewModel.commentContentsLiveData.observe(this){
+            val result=it.getOrNull()
+            if(result!=null){
+                for(comment in result){
+                    val postObjectId=comment.getAVObject<AVObject>("post").objectId
+                    for(data in viewModel.dataList){
+                        if(data is Comment && data.isInner && data.post?.objectId==postObjectId){
+                            data.innerText=comment.getString("content")
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+    private fun initListener() {
+        initAppBarListener()
+        initObserver()
+    }
+    private fun setHeaderData(result:AllHomeData){
+        val user=result.user
+        Glide.with(this).load(user.getString("photoUrl"))
+            .apply(RequestOptions.bitmapTransform(CircleCrop()))
+            .into(home_user_photo)
+        home_user_name.text=user.username
+        home_send_energy_text.text=user.getInt("sendEnergy").toString()
+        home_get_energy_text.text=user.getInt("receiveEnergy").toString()
+        home_get_like_text.text=user.getInt("receiveLikes").toString()
+        home_collapsing_layout.title=user.username
+    }
+    private fun assembleDataList(result:AllHomeData){
+        val postCount=result.postCount
+        val commentCount=result.commentCount
+        val postAVList=result.postList
+        val commentAVList=result.commentList
+        if(postCount!=0){
+            viewModel.postList.addAll(postAVList)
+            val postHeader=if(viewModel.isCurrentUser)
+                Header(getString(R.string.home_post_header_my),postCount)
+            else
+                Header(getString(R.string.home_post_header_his),postCount)
+            viewModel.dataList.add(postHeader)
+            for(postAVObject in postAVList){
+                viewModel.dataList.add(postAVObject.toPost())
+            }
+            //todo 继续根据数据查询当前用户是否赞过
+        }
+        if(commentCount!=0){
+            val commentHeader=if(viewModel.isCurrentUser)
+                Header(getString(R.string.home_comment_header_my),commentCount)
+            else
+                Header(getString(R.string.home_comment_header_his),commentCount)
+            viewModel.dataList.add(commentHeader)
+            for(commentAVObject in commentAVList){
+                val postAVObject=commentAVObject.getAVObject<AVObject>("post")
+                viewModel.postList.add(postAVObject)
+                val comment=commentAVObject.toComment()
+                comment.post=postAVObject.toPost()
+                if(!comment.isInner){
+                    comment.innerText= comment.post!!.content
+                }else{
+                    //todo 根据floor查询Comment表，获取comment
+                    viewModel.innerParams.add(InnerCommentParams(comment.post!!.objectId,comment.floor))
+                }
+                viewModel.dataList.add(comment)
+            }
+        }
+        viewModel.getPostLikes(viewModel.postList)
+        if(viewModel.innerParams.size!=0)
+            viewModel.getCommentContents(viewModel.innerParams)
+    }
+    private fun setAdapter(){
+        adapter= HomeAdapter(viewModel.dataList,this)
+        home_recyclerview.layoutManager=LinearLayoutManager(this)
+        home_recyclerview.adapter=adapter
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

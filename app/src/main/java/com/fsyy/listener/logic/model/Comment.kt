@@ -13,7 +13,7 @@ import kotlin.collections.ArrayList
 class Comment(objectId:String, userId:String, val photoUrl:String, userName:String,
               likeCount:Int, content:String, date: Date, var commentCount:Int,
               val floor:Int, val isInner:Boolean=false,isLike:Boolean=false,likeObjectId:String="",
-              val innerCommentList:ArrayList<InnerComment> =ArrayList(),var post: Post?=null,var innerText:String)
+              val innerCommentList:ArrayList<InnerComment> =ArrayList(),var post: Post?=null,var innerText:String="")
     :TreeHole(objectId,userId,userName,content,date,COMMENT,likeCount,isLike,likeObjectId)
 
 

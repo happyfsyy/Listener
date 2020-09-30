@@ -77,7 +77,7 @@ class PersonalFragment:Fragment(),View.OnClickListener{
     override fun onClick(v: View?) {
         when(v?.id){
             personal_user_layout.id->startActivityForResult<ProfileActivity>(PROFILE)
-            personal_index_layout.id->activity?.startActivity<HomePageActivity>()
+            personal_index_layout.id->activity?.startActivity<HomePageActivity> { putExtra("userId",AVUser.currentUser().objectId) }
             personal_feedback_layout.id->activity?.startActivity<FeedbackActivity>()
         }
     }

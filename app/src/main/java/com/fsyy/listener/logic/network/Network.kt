@@ -37,11 +37,30 @@ object Network {
     fun uploadPhoto(path:String,success:(avObject:AVObject)->Unit)=AVFile.withAbsoluteLocalPath("image.jpg",path).saveAV(success)
     suspend fun uploadImage(path:String)= AVFile("image.jpg",File(path)).saveAVFile()
 
+    suspend fun getUserData(objectId: String)=UserService.genUserQuery(objectId).queryUser()
     suspend fun getCommentCount(objectId: String)=CommentService.genAllCommentCountQuery(objectId).countQuery()
     suspend fun loadRecentComments(objectId: String)=CommentService.genRecentCommentQuery(objectId).queryAV()
     suspend fun getPostCount(objectId: String)=PostService.genAllPostCountQuery(objectId).countQuery()
     suspend fun loadRecentPosts(objectId: String)=PostService.genRecentPostQuery(objectId).queryAV()
+    suspend fun getCommentContent(floor: Int,objectId: String)=CommentService.genCommentQuery(floor,objectId).queryAV()
 
+    private suspend fun AVQuery<AVUser>.queryUser():List<AVUser>{
+        return suspendCoroutine {
+            findInBackground().subscribe(object : Observer<List<AVUser>> {
+                override fun onSubscribe(d: Disposable) {
+                }
+                override fun onNext(t: List<AVUser>) {
+                    it.resume(t)
+                }
+                override fun onError(e: Throwable) {
+                    //todo 显示toast，居中，图片
+                    it.resumeWithException(e)
+                }
+                override fun onComplete() {
+                }
+            })
+        }
+    }
     private suspend fun AVQuery<AVObject>.countQuery():Int{
         LogUtils.e("执行数量查询")
         return suspendCoroutine {

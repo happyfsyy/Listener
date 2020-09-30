@@ -5,6 +5,7 @@ import cn.leancloud.AVObject
 import com.fsyy.listener.R
 import com.fsyy.listener.logic.model.AllComments
 import com.fsyy.listener.logic.model.AllHomeData
+import com.fsyy.listener.logic.model.InnerCommentParams
 import com.fsyy.listener.logic.network.Network
 import com.fsyy.listener.ui.MyApplication
 import com.fsyy.listener.utils.LogUtils
@@ -85,13 +86,26 @@ object Repository {
     }
     fun loadAllHomeData(objectId: String)= query(Dispatchers.Main){
         coroutineScope {
+            val deferredUserData=async { Network.getUserData(objectId) }
             val deferredComCount=async { Network.getCommentCount(objectId) }
             val deferredRecentComments=async { Network.loadRecentComments(objectId) }
             val deferredPostCount=async { Network.getPostCount(objectId) }
             val deferredRecentPosts=async { Network.loadRecentPosts(objectId) }
-            Result.success(AllHomeData(deferredComCount.await(),deferredRecentComments.await(),
+            Result.success(AllHomeData(deferredUserData.await()[0],deferredComCount.await(),deferredRecentComments.await(),
                 deferredPostCount.await(),deferredRecentPosts.await()))
         }
+    }
+    fun getCommentContents(params:List<InnerCommentParams>)= query(Dispatchers.Main){
+        val comments=ArrayList<AVObject>()
+        coroutineScope {
+            for(param in params){
+                launch {
+                    val comment=async { Network.getCommentContent(param.floor,param.objectId) }.await()[0]
+                    comments.add(comment)
+                }
+            }
+        }
+        Result.success(comments)
     }
 
     /**

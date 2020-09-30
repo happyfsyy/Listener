@@ -24,8 +24,10 @@ fun Date.displayDate():String{
         val number=interval/ ONE_HOUR
         displayDate=String.format(MyApplication.context.resources.getString(R.string.date_hours),number)
     }else if(interval<= ONE_MONTH){
-        val number=interval/ ONE_DAY
-        displayDate=String.format(MyApplication.context.resources.getString(R.string.date_days),number)
+//        val number=interval/ ONE_DAY
+//        displayDate=String.format(MyApplication.context.resources.getString(R.string.date_days),number)
+        val simpleDateFormat=SimpleDateFormat("MM-dd",Locale.CHINA)
+        displayDate=simpleDateFormat.format(this)
     }else if(interval<= ONE_YEAR){
         val simpleDateFormat=SimpleDateFormat("MM-dd",Locale.CHINA)
         displayDate=simpleDateFormat.format(this)

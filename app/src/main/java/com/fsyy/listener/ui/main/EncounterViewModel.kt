@@ -52,7 +52,7 @@ class EncounterViewModel :ViewModel(){
     }
 
     /**
-     * 加载
+     * 加载帖子赞的情况
      */
     private val paramPostsLiveData=MutableLiveData<List<AVObject>>()
     fun loadLikes(paramPosts:List<AVObject>){

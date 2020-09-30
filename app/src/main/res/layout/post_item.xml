@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="@dimen/inner_padding"
     android:background="@drawable/personal_item_bg"
-    android:layout_marginBottom="@dimen/inner_padding">
+    android:layout_marginBottom="@dimen/inner_padding_top">
     <ImageView
         android:id="@+id/post_photo"
         android:layout_width="30dp"

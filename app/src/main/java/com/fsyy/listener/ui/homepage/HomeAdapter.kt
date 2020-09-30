@@ -1,5 +1,6 @@
 package com.fsyy.listener.ui.homepage
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +14,13 @@ import com.fsyy.listener.logic.model.Comment
 import com.fsyy.listener.logic.model.Header
 import com.fsyy.listener.logic.model.Post
 import com.fsyy.listener.logic.model.TreeHole
+import com.fsyy.listener.ui.detail.DetailActivity
 import com.fsyy.listener.ui.main.CommentViewHolder
 import com.fsyy.listener.ui.main.HeaderViewHolder
 import com.fsyy.listener.ui.main.PostViewHolder
 import com.fsyy.listener.ui.main.TreeHoleViewHolder
 import com.fsyy.listener.utils.extension.displayDate
+import com.fsyy.listener.utils.extension.startActivity
 import java.lang.IllegalArgumentException
 
 class HomeAdapter(private val dataList:List<Any>, val context:Context):RecyclerView.Adapter<TreeHoleViewHolder>() {
@@ -36,11 +39,21 @@ class HomeAdapter(private val dataList:List<Any>, val context:Context):RecyclerV
         }
         TreeHole.POST->{
             val view=LayoutInflater.from(context).inflate(R.layout.post_item,parent,false)
-            PostViewHolder(view)
+            PostViewHolder(view).apply {
+                itemView.setOnClickListener{
+                    (context as Activity).startActivity<DetailActivity> {
+                        putExtra("post",dataList[adapterPosition] as Post) }
+                }
+            }
         }
         TreeHole.COMMENT->{
             val view=LayoutInflater.from(context).inflate(R.layout.comment_item,parent,false)
-            CommentViewHolder(view)
+            CommentViewHolder(view).apply {
+                itemView.setOnClickListener{
+                    (context as Activity).startActivity<DetailActivity> {
+                        putExtra("post",(dataList[adapterPosition] as Comment).post)}
+                }
+            }
         }
         else-> throw IllegalArgumentException("不是我要的数据")
     }

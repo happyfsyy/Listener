@@ -50,6 +50,12 @@
         android:paddingStart="@dimen/outer_padding"
         android:paddingEnd="@dimen/outer_padding"
         android:layout_marginBottom="50dp"/>
+    <ProgressBar
+        android:id="@+id/home_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/MyProgressBar"
+        android:layout_gravity="center"/>
     <Button
         android:id="@+id/home_private_msg"
         android:layout_width="match_parent"
@@ -60,5 +66,5 @@
         android:background="#6699cc"
         android:alpha="0.6"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/commonTextSizeBig"/>
+        android:textSize="18sp"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
