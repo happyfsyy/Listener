@@ -50,6 +50,17 @@ class HomePageActivity : AppCompatActivity() {
         viewModel.isCurrentUser = viewModel.userId==AVUser.currentUser().objectId
         viewModel.getData(viewModel.userId)
     }
+    private fun initPrivateMsgListener(){
+        if(viewModel.isCurrentUser){
+            home_private_msg.visibility=View.GONE
+        }else{
+            home_private_msg.visibility=View.VISIBLE
+            home_private_msg.setOnClickListener {
+                //todo 跳转到私信界面
+
+            }
+        }
+    }
     private fun initAppBarListener(){
         home_appbar_layout.addOnOffsetChangedListener(object : AppBarStateChangeListener() {
             override fun onStateChanged(appBarLayout: AppBarLayout, state: Int) {
@@ -118,6 +129,7 @@ class HomePageActivity : AppCompatActivity() {
         }
     }
     private fun initListener() {
+        initPrivateMsgListener()
         initAppBarListener()
         initObserver()
     }

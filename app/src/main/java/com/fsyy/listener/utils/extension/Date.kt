@@ -37,3 +37,4 @@ fun Date.displayDate():String{
     }
     return displayDate
 }
+fun Date.displayMonthDate():String=SimpleDateFormat("MM年dd日", Locale.CHINA).format(this)
