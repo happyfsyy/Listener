@@ -9,6 +9,7 @@ import com.fsyy.listener.logic.model.InnerCommentParams
 import com.fsyy.listener.logic.network.Network
 import com.fsyy.listener.ui.MyApplication
 import com.fsyy.listener.utils.LogUtils
+import com.fsyy.listener.utils.ToastUtil
 import com.fsyy.listener.utils.extension.showToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -108,6 +109,11 @@ object Repository {
         Result.success(comments)
     }
 
+    fun getPrivatePosts(objectId: String)= query(Dispatchers.Main){
+        val response=Network.getPrivatePosts(objectId)
+        Result.success(response)
+    }
+
     /**
      * 这里只是简化了方法，并且对查询结果进行了LiveData的包装
      */
@@ -116,7 +122,9 @@ object Repository {
         val result=try{
             block()
         }catch (e:Exception){
-            MyApplication.context.getString(R.string.failure_text).showToast()
+//            MyApplication.context.getString(R.string.failure_text).showToast()
+            ToastUtil.showCenterToast(R.drawable.tag_selected,MyApplication.context.getString(R.string.toast_network_exception))
+
             LogUtils.e("Repository: ${e.printStackTrace()}")
             Result.failure<T>(e)
         }

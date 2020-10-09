@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.fsyy.listener.R
+import com.fsyy.listener.logic.model.PrivatePost
 import kotlinx.android.synthetic.main.comment_item.*
 import kotlinx.android.synthetic.main.fragment_tree_hole.*
 
@@ -19,8 +20,8 @@ class TreeHoleFragment:Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        arguments?.takeIf { it.containsKey("params") }?.apply {
-            tree_hole_date_text.text=getInt("params").toString()
-        }
+        val post:PrivatePost=arguments?.get(PrivateActivity.POST) as PrivatePost
+        tree_hole_date_text.text=post.date
+        tree_hole_content_text.text=post.content
     }
 }

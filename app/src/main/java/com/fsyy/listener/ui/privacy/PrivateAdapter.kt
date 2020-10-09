@@ -2,20 +2,17 @@ package com.fsyy.listener.ui.privacy
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.fsyy.listener.logic.model.PrivatePost
 
-class PrivateAdapter(fm: FragmentManager):FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-    override fun getCount(): Int {
-        return 10
-    }
+class PrivateAdapter(activity: PrivateActivity, private val postList:List<PrivatePost>):FragmentStateAdapter(activity) {
+    override fun getItemCount():Int=postList.size
 
-    override fun getItem(position: Int): Fragment {
-        val fragment=TreeHoleFragment()
-        fragment.arguments= Bundle().apply {
-            putInt("params",position)
+    override fun createFragment(position: Int): Fragment {
+        return TreeHoleFragment().apply {
+            arguments =Bundle().apply {
+                putSerializable(PrivateActivity.POST,postList[position])
+            }
         }
-        return fragment
     }
 }

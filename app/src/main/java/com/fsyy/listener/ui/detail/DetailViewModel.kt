@@ -1,20 +1,31 @@
 package com.fsyy.listener.ui.detail
 
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.Button
+import android.widget.PopupWindow
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import cn.leancloud.AVObject
+import com.fsyy.listener.R
 import com.fsyy.listener.logic.Repository
 import com.fsyy.listener.logic.model.CommentLoadMoreParams
 import com.fsyy.listener.logic.model.InnerCommentParams
 import com.fsyy.listener.logic.model.Post
 import com.fsyy.listener.logic.model.TreeHole
 import com.fsyy.listener.logic.network.Network
+import com.fsyy.listener.ui.MyApplication
 
 class DetailViewModel:ViewModel() {
     val dataList=ArrayList<TreeHole>()
     lateinit var post: Post
+    val popupView:View by lazy { LayoutInflater.from(MyApplication.context).inflate(R.layout.detail_popup,null) }
+    val report:Button by lazy { popupView.findViewById(R.id.detail_report) }
+    val share2WeChat:Button by lazy { popupView.findViewById(R.id.detail_share_wechat) }
+    val cancel:Button by lazy { popupView.findViewById(R.id.detail_cancel) }
+    lateinit var popupWindow: PopupWindow
 
     /**
      * 记录上拉记载了多少次,从1开始计数

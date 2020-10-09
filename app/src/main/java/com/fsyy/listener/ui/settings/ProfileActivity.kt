@@ -33,6 +33,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.fsyy.listener.R
 import com.fsyy.listener.utils.LogUtils
+import com.fsyy.listener.utils.PopupUtil
 import com.fsyy.listener.utils.Uri2PathUtil
 import com.fsyy.listener.utils.extension.showToast
 import kotlinx.android.synthetic.main.activity_profile.*
@@ -225,18 +226,7 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
         val inAnimator=AnimatorInflater.loadAnimator(this, R.animator.popup_item_in)
         inAnimator.setTarget(viewModel.popupView)
         inAnimator.start()
-        viewModel.popupWindow=PopupWindow(
-            viewModel.popupView,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        ).apply {
-            isFocusable=true
-            isOutsideTouchable=false
-            animationStyle=R.style.popupAnimation
-            setBackgroundDrawable(ColorDrawable(Color.parseColor("#55000000")))
-            isClippingEnabled=false
-            showAtLocation(window.decorView, Gravity.TOP, 0, 0)
-        }
+        viewModel.popupWindow=PopupUtil.showPopupWindow(viewModel.popupView,window.decorView)
     }
     private fun showDialog(header: String, content: String, type: Int){
         val view=LayoutInflater.from(this).inflate(R.layout.profile_dialog_view, null)

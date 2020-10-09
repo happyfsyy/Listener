@@ -9,7 +9,7 @@
     <color name="backgroundColor">#e8e8e8</color>
     <color name="black_overlay">#66000000</color>
     <color name="textColor">#333333</color>
-    <color name="grayTextColor">#888888</color>
+    <color name="grayTextColor">#666666</color>
     <color name="tagColor">#80a9d3</color>
     <color name="scrollbarColor">#6699cc</color>
     <color name="innerCommentBg">#f5f5f5</color>

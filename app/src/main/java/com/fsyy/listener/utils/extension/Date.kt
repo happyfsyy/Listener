@@ -37,4 +37,15 @@ fun Date.displayDate():String{
     }
     return displayDate
 }
-fun Date.displayMonthDate():String=SimpleDateFormat("MM年dd日", Locale.CHINA).format(this)
+fun Date.displayYearMonthDate():String{
+    val nowCal=Calendar.getInstance(Locale.CHINA)
+    val nowYear=nowCal.get(Calendar.YEAR)
+    LogUtils.e("当前年份是$nowYear")
+    nowCal.time=this
+    val thisYear=nowCal.get(Calendar.YEAR)
+    return if(nowYear==thisYear){
+        SimpleDateFormat("MM月dd日", Locale.CHINA).format(this)
+    }else{
+        SimpleDateFormat("yyyy年MM月dd日", Locale.CHINA).format(this)
+    }
+}

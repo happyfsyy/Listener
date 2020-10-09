@@ -5,6 +5,7 @@ import cn.leancloud.AVUser
 import com.fsyy.listener.logic.model.Comment
 import com.fsyy.listener.logic.model.InnerComment
 import com.fsyy.listener.logic.model.Post
+import com.fsyy.listener.logic.model.PrivatePost
 
 
 fun AVObject.toPost():Post{
@@ -51,5 +52,10 @@ fun valuesOfAVObject(className: String,map:Map<String,Any?>)=AVObject(className)
     for((key,value) in map){
         put(key,value)
     }
+}
+fun AVObject.toPrivatePost():PrivatePost{
+    val date=createdAt.displayYearMonthDate()
+    val content=getString("content")
+    return PrivatePost(date,content)
 }
 

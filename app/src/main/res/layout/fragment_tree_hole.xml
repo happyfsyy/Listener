@@ -8,23 +8,26 @@
         android:id="@+id/tree_hole_header_img"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="#ff0000"
-        />
+        android:src="@drawable/private_header_bg"
+        android:scaleType="centerCrop"/>
     <TextView
         android:id="@+id/tree_hole_date_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/commonTextSizeBig"
         android:textColor="@color/textColor"
-        android:layout_margin="@dimen/inner_padding"/>
+        android:layout_margin="@dimen/inner_padding"
+        android:text="10月9日"/>
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/inner_padding"
+        android:layout_marginEnd="@dimen/inner_padding">
         <TextView
             android:id="@+id/tree_hole_content_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/commonTextSize"
-            android:textColor="@color/textColor"/>
+            android:textColor="@color/grayTextColor"/>
     </ScrollView>
 </LinearLayout>

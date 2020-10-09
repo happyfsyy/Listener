@@ -10,6 +10,7 @@ import cn.leancloud.AVUser
 import com.fsyy.listener.R
 import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.SoftKeyboardUtils
+import com.fsyy.listener.utils.ToastUtil
 import com.fsyy.listener.utils.extension.showToast
 import kotlinx.android.synthetic.main.fragment_lonely.*
 
@@ -86,7 +87,8 @@ class LonelyFragment : Fragment(),View.OnClickListener{
         val content=lonely_content.text.toString().trim()
         val tag=lonely_tag.text.toString().trim()
         if(content==""){
-            getString(R.string.edit_content_toast).showToast()
+//            getString(R.string.edit_content_toast).showToast()
+            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.edit_content_toast))
             return
         }
         viewModel.publishPost(mapOf("author" to AVUser.currentUser(),
@@ -94,7 +96,8 @@ class LonelyFragment : Fragment(),View.OnClickListener{
             LogUtils.e(it.toJSONString())
             clearEditText()
             hideKeyboard()
-            getString(R.string.lonely_submit_success).showToast()
+//            getString(R.string.lonely_submit_success).showToast()
+            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.lonely_submit_success))
         }
     }
 }

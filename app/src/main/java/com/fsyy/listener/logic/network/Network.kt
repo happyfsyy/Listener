@@ -7,6 +7,7 @@ import cn.leancloud.AVUser
 import com.fsyy.listener.R
 import com.fsyy.listener.ui.MyApplication
 import com.fsyy.listener.utils.LogUtils
+import com.fsyy.listener.utils.ToastUtil
 import com.fsyy.listener.utils.extension.showToast
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
@@ -43,6 +44,8 @@ object Network {
     suspend fun getPostCount(objectId: String)=PostService.genAllPostCountQuery(objectId).countQuery()
     suspend fun loadRecentPosts(objectId: String)=PostService.genRecentPostQuery(objectId).queryAV()
     suspend fun getCommentContent(floor: Int,objectId: String)=CommentService.genCommentQuery(floor,objectId).queryAV()
+
+    suspend fun getPrivatePosts(userId: String)=PostService.genAllPrivatePostQuery(userId).queryAV()
 
     private suspend fun AVQuery<AVUser>.queryUser():List<AVUser>{
         return suspendCoroutine {
@@ -120,7 +123,8 @@ object Network {
         }
         override fun onError(e: Throwable) {
             //todo 网络状况不佳，发布出现异常
-            MyApplication.context.resources.getString(R.string.failure_text).showToast()
+//            MyApplication.context.resources.getString(R.string.failure_text).showToast()
+            ToastUtil.showCenterToast(R.drawable.tag_selected,MyApplication.context.getString(R.string.failure_text))
             LogUtils.e("Network: ${e.stackTraceToString()}")
         }
         override fun onComplete() {

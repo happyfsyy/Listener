@@ -2,12 +2,14 @@ package com.fsyy.listener.logic.network
 
 import cn.leancloud.AVObject
 import cn.leancloud.AVQuery
+import com.fsyy.listener.ui.main.LonelyViewModel
 import com.fsyy.listener.utils.extension.valuesOfAVObject
 
 object PostService {
     fun genLoadQuery(limitNum:Int):AVQuery<AVObject> = AVQuery<AVObject>("Post").apply {
         //todo 根据updatedAt将Post进行排序，但是有个问题，每次点赞取消赞，都会更新updatedAt，我想设置为只有评论才更新updatedAt
         limit=limitNum
+        whereEqualTo("type",LonelyViewModel.OPEN)
         include("author")
         orderByDescending("updatedAt")
     }
@@ -18,6 +20,7 @@ object PostService {
     fun genLoadMoreQuery(limitNum: Int,loadCount:Int):AVQuery<AVObject> =AVQuery<AVObject>("Post").apply {
         //todo 这里可以不用skip，直接获取list的最后一个数据的updatedAt，然后orderByDescending
         limit=limitNum
+        whereEqualTo("type",LonelyViewModel.OPEN)
         include("author")
         orderByDescending("updatedAt")
         skip(limitNum*loadCount)
@@ -28,11 +31,19 @@ object PostService {
      * 查询所有的帖子数量
      */
     fun genAllPostCountQuery(userId:String)=AVQuery<AVObject>("Post").apply {
+        whereEqualTo("type",LonelyViewModel.OPEN)
         whereEqualTo("author",AVObject.createWithoutData("_User",userId))
     }
     fun genRecentPostQuery(userId: String)=AVQuery<AVObject>("Post").apply {
+        whereEqualTo("type",LonelyViewModel.OPEN)
+        whereEqualTo("author",AVObject.createWithoutData("_User",userId))
         include("author")
         limit=3
+        orderByDescending("createdAt")
+    }
+    fun genAllPrivatePostQuery(userId:String)=AVQuery<AVObject>("Post").apply {
+        whereEqualTo("author",AVObject.createWithoutData("_User",userId))
+        whereEqualTo("type",LonelyViewModel.PRIVATE)
         orderByDescending("createdAt")
     }
 }

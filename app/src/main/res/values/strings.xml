@@ -71,4 +71,10 @@
     <string name="home_private_msg">私信</string>
     <string name="home_comment_inner_text1">回复了帖子：%s</string>
     <string name="home_comment_inner_text2">回复了评论：%s</string>
+    <string name="toast_comment_success">评论发表成功</string>
+    <string name="toast_network_exception">网络异常</string>
+    <string name="detail_report">举报</string>
+    <string name="detail_share_wechat">分享到微信</string>
+    <string name="toast_report_success">举报成功</string>
+    <string name="toast_share_wechat">还未做这个功能</string>
 </resources>

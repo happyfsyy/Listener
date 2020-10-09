@@ -5,25 +5,25 @@
     android:paddingStart="@dimen/outer_padding"
     android:paddingEnd="@dimen/outer_padding">
     <Button
-        android:id="@+id/profile_takePhoto"
+        android:id="@+id/detail_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/inner_padding_top"
-        android:text="@string/popup_take_photo"
+        android:text="@string/detail_report"
         android:textSize="@dimen/commonTextSize"
         android:background="@drawable/personal_item_bg"
         android:layout_marginBottom="@dimen/inner_padding"/>
     <Button
-        android:id="@+id/profile_albums"
+        android:id="@+id/detail_share_wechat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/inner_padding_top"
-        android:text="@string/popup_albums"
+        android:text="@string/detail_share_wechat"
         android:textSize="@dimen/commonTextSize"
         android:background="@drawable/personal_item_bg"
         android:layout_marginBottom="@dimen/inner_padding"/>
     <Button
-        android:id="@+id/profile_cancel"
+        android:id="@+id/detail_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/inner_padding"

@@ -2,6 +2,7 @@ package com.fsyy.listener.ui.settings
 
 import android.net.Uri
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.PopupWindow
 import androidx.lifecycle.ViewModel
@@ -13,7 +14,7 @@ import com.fsyy.listener.ui.MyApplication
 import java.io.File
 
 class ProfileViewModel:ViewModel() {
-    val popupView by lazy { LayoutInflater.from(MyApplication.context).inflate(R.layout.popup_photo_item,null)}
+    val popupView: View by lazy { LayoutInflater.from(MyApplication.context).inflate(R.layout.popup_photo_item,null)}
     val takePhoto: Button by lazy {  popupView.findViewById(R.id.profile_takePhoto)}
     val albums: Button by lazy {  popupView.findViewById(R.id.profile_albums) }
     val cancel: Button by lazy {  popupView.findViewById(R.id.profile_cancel)}

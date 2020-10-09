@@ -2,7 +2,9 @@ package com.fsyy.listener.ui.detail
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.ViewConfiguration
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,15 +15,17 @@ import com.fsyy.listener.logic.model.Comment
 import com.fsyy.listener.logic.model.InnerComment
 import com.fsyy.listener.logic.model.Post
 import com.fsyy.listener.logic.model.TreeHole
+import com.fsyy.listener.ui.MyApplication
 import com.fsyy.listener.utils.LogUtils
+import com.fsyy.listener.utils.PopupUtil
 import com.fsyy.listener.utils.SoftKeyboardUtils
-import com.fsyy.listener.utils.extension.showToast
+import com.fsyy.listener.utils.ToastUtil
 import com.fsyy.listener.utils.extension.toComment
 import com.fsyy.listener.utils.extension.toInnerComment
 import kotlinx.android.synthetic.main.activity_detail.*
 import kotlin.collections.ArrayList
 
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(),View.OnClickListener {
     private lateinit var adapter: DetailAdapter
     private val viewModel by lazy { ViewModelProvider(this).get(DetailViewModel::class.java) }
     private val limit=10
@@ -38,12 +42,37 @@ class DetailActivity : AppCompatActivity() {
         if (viewModel.post.commentCount>0){
             loadComment()
         }
+        initToolbar()
         initObserver()
         initAdapter()
         initRecyclerView()
         initListener()
         refreshData()
     }
+    private fun initToolbar(){
+        detail_header.setRightListener {
+            viewModel.popupWindow=PopupUtil.showPopupWindow(viewModel.popupView,window.decorView)
+            viewModel.report.setOnClickListener(this)
+            viewModel.share2WeChat.setOnClickListener(this)
+            viewModel.cancel.setOnClickListener(this)
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            viewModel.report.id-> {
+                viewModel.popupWindow.dismiss()
+                ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.toast_report_success))
+                //todo saveEventually
+            }
+            viewModel.share2WeChat.id-> {
+                viewModel.popupWindow.dismiss()
+                ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.toast_share_wechat))
+            }
+            viewModel.cancel.id-> viewModel.popupWindow.dismiss()
+        }
+    }
+
     private fun initObserver(){
         viewModel.allCommentsLiveData.observe(this){
             val allComments=it.getOrNull()
@@ -121,7 +150,8 @@ class DetailActivity : AppCompatActivity() {
                    viewModel.dataList.add(comment.toComment())
                    adapter.notifyDataSetChanged()
                    clearUI()
-                   "发布成功了".showToast()
+//                   "发布成功了".showToast()
+                   ToastUtil.showCenterToast(R.drawable.tag_selected, getString(R.string.toast_comment_success))
                }
             }
         }
@@ -291,7 +321,8 @@ class DetailActivity : AppCompatActivity() {
                     viewModel.fetchNewComment(comment.objectId)
                 }
             }else{
-                getString(R.string.edit_content_toast).showToast()
+//                getString(R.string.edit_content_toast).showToast()
+                ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.edit_content_toast))
             }
         }
     }
