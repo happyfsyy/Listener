@@ -34,6 +34,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.fsyy.listener.R
 import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.PopupUtil
+import com.fsyy.listener.utils.ToastUtil
 import com.fsyy.listener.utils.Uri2PathUtil
 import com.fsyy.listener.utils.extension.showToast
 import kotlinx.android.synthetic.main.activity_profile.*
@@ -161,7 +162,7 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
                 FROM_ALBUM -> fromAlbum()
             }
         }else{
-            getString(R.string.write_external_denied).showToast()
+            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.write_external_denied))
         }
     }
 
@@ -170,12 +171,8 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
         when(requestCode){
             TAKE_PHOTO -> {
                 if (resultCode == RESULT_OK) {
-                    //todo 任何耗时操作都要显示进度条（可以是在popupWindow的进度条，进度条显示在popupWindow的中间）
-                    // todo 存储avfile，avfile保存成功再将图片加载进图片，否则就不加载
                     viewModel.isModified=true
-                    Glide.with(this).load(viewModel.imageUri)
-                        .apply(RequestOptions.bitmapTransform(CircleCrop()))
-                        .into(profile_photo_img)
+                    viewModel.popupWindow2=PopupUtil.showPopupWindow(viewModel.popupView2,window.decorView,false)
                     LogUtils.e("拍照图片的uri是${viewModel.imageUri}")
                     LogUtils.e("uri得到的path是${viewModel.imageUri.path}")
                     LogUtils.e("我根据file获得本地路径是${viewModel.outputImage.absolutePath}")
@@ -183,20 +180,21 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
                     viewModel.uploadPhoto(viewModel.outputImage.absolutePath) {
                         LogUtils.e("我上传图片成功了，你敢信")
                         //todo 在这里进行AVUser.save的回调，在回调完成之后，才把图片加载到view之中，并且让进度条消失
+                        Glide.with(this).load(viewModel.imageUri)
+                            .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                            .into(profile_photo_img)
                         savePhoto(it as AVFile)
-                        //todo 在这里setResult
+                        viewModel.popupWindow2.dismiss()
                     }
                 }
             }
             FROM_ALBUM -> {
                 if (resultCode == RESULT_OK && data != null) {
                     viewModel.isModified=true
+                    viewModel.popupWindow2=PopupUtil.showPopupWindow(viewModel.popupView2,window.decorView,false)
                     data.data?.let { it ->
                         LogUtils.e("选取图片的uri是$it")
                         LogUtils.e("选取相册图片的绝对路径是${Uri2PathUtil.getImageRealPathFromContentUri(it)}")
-                        Glide.with(this).load(it)
-                            .apply(RequestOptions.bitmapTransform(CircleCrop()))
-                            .into(profile_photo_img)
                         val absolutePath = Uri2PathUtil.getImageRealPathFromContentUri(it)
                         val file=File(absolutePath)
                         file.apply {
@@ -210,8 +208,11 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
                         }
                         viewModel.uploadPhoto(Uri2PathUtil.getImageRealPathFromContentUri(it)!!){avObject->
                             LogUtils.e("上传图片成功了。。。。")
+                            Glide.with(this).load(it)
+                                .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                                .into(profile_photo_img)
                             savePhoto(avObject as AVFile)
-                            //todo setResult
+                            viewModel.popupWindow2.dismiss()
                         }
                     }
                 }
@@ -245,9 +246,9 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
                 when (val contentText=contentEdit.text.toString().trim()) {
                     "" -> {
                         if (type == TYPE_USERNAME)
-                            getString(R.string.profile_username_toast).showToast()
+                            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.profile_username_toast))
                         else
-                            getString(R.string.profile_sign_toast).showToast()
+                            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.profile_sign_toast))
                     }
                     content -> dialog.dismiss()
                     else -> {
@@ -270,7 +271,6 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
         profile_username_text.text=contentText
         AVUser.currentUser().put("username", contentText)
         AVUser.currentUser().saveEventually()
-        //todo 需不需要显示进度条
     }
     private fun saveSign(contentText: String){
         profile_sign_text.text=contentText

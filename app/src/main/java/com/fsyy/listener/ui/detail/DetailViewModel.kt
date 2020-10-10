@@ -26,6 +26,8 @@ class DetailViewModel:ViewModel() {
     val share2WeChat:Button by lazy { popupView.findViewById(R.id.detail_share_wechat) }
     val cancel:Button by lazy { popupView.findViewById(R.id.detail_cancel) }
     lateinit var popupWindow: PopupWindow
+    val popupView2: View by lazy { LayoutInflater.from(MyApplication.context).inflate(R.layout.popup_submit,null) }
+    var popupWindow2:PopupWindow?=null
 
     /**
      * 记录上拉记载了多少次,从1开始计数

@@ -1,6 +1,10 @@
 package com.fsyy.listener.ui.detail
 
 import android.content.Context
+import android.graphics.Color
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -134,7 +138,11 @@ class DetailAdapter(private val list:List<TreeHole>,private val context: Context
         val innerComment=comment.innerCommentList[index]
         //todo setbg drawable spannableString
         val text="${innerComment.userName}回复${innerComment.toUserName}:${innerComment.content} ${innerComment.date.displayDate()}"
-        textView.text=text
+        val ss=SpannableString(text)
+        ss.setSpan(ForegroundColorSpan(Color.parseColor("#80a9d3")),0,innerComment.userName.length,Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+        ss.setSpan(ForegroundColorSpan(Color.parseColor("#aaaaaa")),text.length-innerComment.date.displayDate().length,
+            text.length,Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+        textView.text=ss
         textView.setOnClickListener {
             innerCommentClickListener(pos,index)
         }

@@ -30,11 +30,10 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
     private val viewModel by lazy { ViewModelProvider(this).get(DetailViewModel::class.java) }
     private val limit=10
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-        //todo 评论之后都要弹出进度条，开始转啊转的，然后是max的评论发布成功
-
         LogUtils.e("Detail：intent.get()是${intent.getSerializableExtra("post") as Post}")
         viewModel.post=intent.getSerializableExtra("post") as Post
         viewModel.toUserNameLiveData.value="楼主"
@@ -63,7 +62,7 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
             viewModel.report.id-> {
                 viewModel.popupWindow.dismiss()
                 ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.toast_report_success))
-                //todo saveEventually
+                saveReport()
             }
             viewModel.share2WeChat.id-> {
                 viewModel.popupWindow.dismiss()
@@ -71,6 +70,12 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
             }
             viewModel.cancel.id-> viewModel.popupWindow.dismiss()
         }
+    }
+    private fun saveReport(){
+        val avObject=AVObject("Report")
+        avObject.put("author",AVUser.currentUser())
+        avObject.put("post",AVObject.createWithoutData("Post",viewModel.post.objectId))
+        avObject.saveEventually()
     }
 
     private fun initObserver(){
@@ -150,7 +155,7 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
                    viewModel.dataList.add(comment.toComment())
                    adapter.notifyDataSetChanged()
                    clearUI()
-//                   "发布成功了".showToast()
+                   viewModel.popupWindow2?.dismiss()
                    ToastUtil.showCenterToast(R.drawable.tag_selected, getString(R.string.toast_comment_success))
                }
             }
@@ -199,6 +204,7 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
                     comment.innerCommentList.add(innerCommentAV.toInnerComment())
                 }
                 clearUI()
+                viewModel.popupWindow2?.dismiss()
                 adapter.notifyItemChanged(floor)
             }
         }
@@ -314,6 +320,8 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
             //todo 提交的时候，获取最新的comment
             val content=detail_edit.text.toString().trim()
             if(content!=""){
+                //todo 显示进度条
+                viewModel.popupWindow2=PopupUtil.showPopupWindow(viewModel.popupView2,window.decorView,false)
                 if(viewModel.floorLiveData.value==0) {
                     viewModel.fetchNewPost(viewModel.post.objectId)
                 }else {
@@ -321,7 +329,6 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
                     viewModel.fetchNewComment(comment.objectId)
                 }
             }else{
-//                getString(R.string.edit_content_toast).showToast()
                 ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.edit_content_toast))
             }
         }
@@ -337,8 +344,8 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
         detail_swipe_refresh.isRefreshing=true
     }
     private fun clearUI(){
+        SoftKeyboardUtils.hideKeyboard2(this,detail_edit)
         detail_edit.setText("")
         detail_edit.clearFocus()
-        SoftKeyboardUtils.hideKeyboard(this)
     }
 }

@@ -1,10 +1,15 @@
 package com.fsyy.listener.ui.settings
 
 import android.net.Uri
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.PopupWindow
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.fsyy.listener.R
 import com.fsyy.listener.logic.Repository
+import com.fsyy.listener.ui.MyApplication
 
 class FeedbackViewModel :ViewModel(){
     companion object{
@@ -16,6 +21,8 @@ class FeedbackViewModel :ViewModel(){
     var imgUri1:Uri?=null
     var imgUri2:Uri?=null
     var imgUri3:Uri?=null
+    val popupView: View by lazy { LayoutInflater.from(MyApplication.context).inflate(R.layout.popup_submit,null) }
+    lateinit var popupWindow: PopupWindow
 
     private val pathsLiveData=MutableLiveData<ArrayList<String>>()
     val imgUrlLiveData=Transformations.switchMap(pathsLiveData){

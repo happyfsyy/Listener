@@ -16,6 +16,8 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.fsyy.listener.R
 import com.fsyy.listener.utils.LogUtils
+import com.fsyy.listener.utils.PopupUtil
+import com.fsyy.listener.utils.ToastUtil
 import com.fsyy.listener.utils.Uri2PathUtil
 import com.fsyy.listener.utils.extension.showToast
 import kotlinx.android.synthetic.main.activity_feedback.*
@@ -71,6 +73,10 @@ class FeedbackActivity : AppCompatActivity(),View.OnClickListener{
                     saveEventually()
                 }
                 clearUI()
+                viewModel.popupWindow.dismiss()
+                ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.toast_comment_success))
+            }else{
+                viewModel.popupWindow.dismiss()
             }
         }
     }
@@ -96,8 +102,9 @@ class FeedbackActivity : AppCompatActivity(),View.OnClickListener{
     private fun submit(){
         val content=feedback_edit.text.toString().trim()
         if(content.isEmpty()) {
-            getString(R.string.edit_content_toast).showToast()
+            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.edit_content_toast))
         }else{
+            viewModel.popupWindow=PopupUtil.showPopupWindow(viewModel.popupView,window.decorView,false)
             //todo 上传三张图片
             val path0=viewModel.imgUri1?.let { Uri2PathUtil.getImageRealPathFromContentUri(it) }
             val path1=viewModel.imgUri2?.let { Uri2PathUtil.getImageRealPathFromContentUri(it) }
@@ -116,7 +123,7 @@ class FeedbackActivity : AppCompatActivity(),View.OnClickListener{
             if(grantResults.isNotEmpty()&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
                 fromAlbum()
             }else{
-                getString(R.string.write_external_denied).showToast()
+                ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.write_external_denied))
             }
         }
     }

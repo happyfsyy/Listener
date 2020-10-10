@@ -19,7 +19,7 @@ import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
 object Repository {
-    fun publishPost(map:Map<String,Any?>,success:(avObject:AVObject)->Unit)=Network.publishPost(map,success)
+    fun publishPost(map:Map<String,Any?>,success:(avObject:AVObject)->Unit,failure:(e:Throwable)->Unit)=Network.publishPost(map,success,failure)
 
     fun loadPosts(limit: Int)= query(Dispatchers.Main){
         val response=Network.loadPosts(limit)

@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import cn.leancloud.AVUser
 import com.fsyy.listener.R
 import com.fsyy.listener.utils.LogUtils
+import com.fsyy.listener.utils.PopupUtil
 import com.fsyy.listener.utils.SoftKeyboardUtils
 import com.fsyy.listener.utils.ToastUtil
 import com.fsyy.listener.utils.extension.showToast
@@ -87,17 +88,19 @@ class LonelyFragment : Fragment(),View.OnClickListener{
         val content=lonely_content.text.toString().trim()
         val tag=lonely_tag.text.toString().trim()
         if(content==""){
-//            getString(R.string.edit_content_toast).showToast()
             ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.edit_content_toast))
             return
         }
-        viewModel.publishPost(mapOf("author" to AVUser.currentUser(),
-            "content" to content,"tag" to tag,"type" to viewModel.type.value)){
+        viewModel.popupWindow=PopupUtil.showPopupWindow(viewModel.popupView,activity!!.window.decorView)
+        val map=mapOf("author" to AVUser.currentUser(),
+            "content" to content,"tag" to tag,"type" to viewModel.type.value)
+        viewModel.publishPost(map,success = {
             LogUtils.e(it.toJSONString())
+            viewModel.popupWindow.dismiss()
             clearEditText()
             hideKeyboard()
-//            getString(R.string.lonely_submit_success).showToast()
-            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.lonely_submit_success))
+            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.lonely_submit_success)) }){
+            viewModel.popupWindow.dismiss()
         }
     }
 }

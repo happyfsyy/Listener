@@ -22,5 +22,7 @@ class ProfileViewModel:ViewModel() {
     lateinit var popupWindow:PopupWindow
     lateinit var outputImage:File
     lateinit var imageUri:Uri
+    val popupView2: View by lazy { LayoutInflater.from(MyApplication.context).inflate(R.layout.popup_submit,null) }
+    lateinit var popupWindow2:PopupWindow
     fun uploadPhoto(path:String,success:(avObject:AVObject)->Unit)=Network.uploadPhoto(path,success)
 }

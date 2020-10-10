@@ -17,7 +17,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 object Network {
-    fun publishPost(map: Map<String,Any?>,success: (avObject: AVObject) -> Unit)=PostService.genPost(map).saveAV(success)
+    fun publishPost(map: Map<String,Any?>,success: (avObject: AVObject) -> Unit,failure:(e:Throwable)->Unit)=PostService.genPost(map).publishPostAV(success,failure)
 
     suspend fun loadPosts(limit:Int):List<AVObject> =PostService.genLoadQuery(limit).queryAV()
     suspend fun loadMorePosts(limit: Int,loadCount:Int):List<AVObject> =PostService.genLoadMoreQuery(limit,loadCount).queryAV()
@@ -126,6 +126,20 @@ object Network {
 //            MyApplication.context.resources.getString(R.string.failure_text).showToast()
             ToastUtil.showCenterToast(R.drawable.tag_selected,MyApplication.context.getString(R.string.failure_text))
             LogUtils.e("Network: ${e.stackTraceToString()}")
+        }
+        override fun onComplete() {
+        }
+    })
+    private fun AVObject.publishPostAV(success:(avObject:AVObject)->Unit,failure:(e:Throwable)->Unit)=saveInBackground().subscribe(object :Observer<AVObject>{
+        override fun onSubscribe(d: Disposable) {
+        }
+        override fun onNext(t: AVObject) {
+            success(t)
+        }
+        override fun onError(e: Throwable) {
+            ToastUtil.showCenterToast(R.drawable.tag_selected,MyApplication.context.getString(R.string.failure_text))
+            LogUtils.e("Network: ${e.stackTraceToString()}")
+            failure(e)
         }
         override fun onComplete() {
         }
