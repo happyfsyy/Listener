@@ -1,6 +1,7 @@
 package com.fsyy.listener.ui.main
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.app.Person
 import android.content.Intent
 import android.os.Bundle
@@ -21,6 +22,8 @@ import com.fsyy.listener.ui.settings.ProfileActivity
 import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.extension.startActivity
 import com.fsyy.listener.utils.extension.startActivityForResult
+import io.rong.imkit.RongIM
+import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.fragment_personal.*
 
 class PersonalFragment:Fragment(),View.OnClickListener{
@@ -61,9 +64,11 @@ class PersonalFragment:Fragment(),View.OnClickListener{
             personal_user_intro.text=intro
     }
     private fun initListener(){
+        personal_message.setOnClickListener(this)
         personal_user_layout.setOnClickListener(this)
         personal_index_layout.setOnClickListener(this)
         personal_private_layout.setOnClickListener(this)
+        personal_buried_layout.setOnClickListener(this)
         personal_feedback_layout.setOnClickListener(this)
     }
     private fun initObserver(){
@@ -81,7 +86,24 @@ class PersonalFragment:Fragment(),View.OnClickListener{
             personal_user_layout.id->startActivityForResult<ProfileActivity>(PROFILE)
             personal_index_layout.id->activity?.startActivity<HomePageActivity> { putExtra("userId",AVUser.currentUser().objectId) }
             personal_private_layout.id->activity?.startActivity<PrivateActivity>()
+            personal_buried_layout.id->buried()
             personal_feedback_layout.id->activity?.startActivity<FeedbackActivity>()
+            personal_message.id->startConversationList()
+        }
+    }
+    private fun startConversationList(){
+        val supportedConversation=HashMap<String,Boolean>()
+        supportedConversation[Conversation.ConversationType.PRIVATE.name] = false
+        LogUtils.e("private的name是 ${Conversation.ConversationType.PRIVATE.name}")
+        RongIM.getInstance().startConversationList(activity,supportedConversation)
+    }
+    private fun buried(){
+        AlertDialog.Builder(activity).apply {
+            setMessage(R.string.buried_message)
+            setPositiveButton(R.string.dialog_confirm) { dialog, _ ->
+                dialog.dismiss()
+            }
+            show()
         }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

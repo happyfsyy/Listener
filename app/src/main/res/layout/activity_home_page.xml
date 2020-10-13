@@ -50,6 +50,14 @@
         android:paddingStart="@dimen/outer_padding"
         android:paddingEnd="@dimen/outer_padding"
         android:layout_marginBottom="40dp"/>
+    <TextView
+        android:id="@+id/home_no_data_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/home_no_data"
+        android:textSize="@dimen/commonTextSize"
+        android:visibility="invisible"/>
     <ProgressBar
         android:id="@+id/home_progressbar"
         android:layout_width="wrap_content"

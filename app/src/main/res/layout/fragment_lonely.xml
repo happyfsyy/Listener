@@ -34,7 +34,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/outer_padding"
-                android:src="@drawable/submit"
+                android:src="@drawable/submit_bg"
                 android:scaleType="centerCrop"
                 android:layout_alignParentBottom="true"/>
         </RelativeLayout>

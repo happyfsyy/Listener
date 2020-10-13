@@ -1,17 +1,23 @@
 package com.fsyy.listener.ui.main
 
+import android.content.Context
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import cn.leancloud.AVUser
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.fsyy.listener.R
 import com.fsyy.listener.logic.model.Post
 import com.fsyy.listener.utils.extension.displayDate
 import com.fsyy.listener.utils.listener.OnItemClickListener
 import com.fsyy.listener.utils.listener.OnLikeClickListener
+import kotlinx.android.synthetic.main.fragment_personal.*
 
-class EncounterAdapter(val list:List<Post>):RecyclerView.Adapter<PostViewHolder>(){
+class EncounterAdapter(val list:List<Post>,val context:Context):RecyclerView.Adapter<PostViewHolder>(){
     private lateinit var onItemClickListener:OnItemClickListener
     private lateinit var onLikeClickListener: OnLikeClickListener
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -31,7 +37,9 @@ class EncounterAdapter(val list:List<Post>):RecyclerView.Adapter<PostViewHolder>
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post=list[position]
         holder.userName.text=post.userName
-        //todo 加载用户头像
+        Glide.with(context).load(post.photoUrl)
+            .apply(RequestOptions.bitmapTransform(CircleCrop()))
+            .into(holder.photo)
         holder.content.text=post.content
         if(post.tag==""){
             holder.tag.visibility=View.GONE

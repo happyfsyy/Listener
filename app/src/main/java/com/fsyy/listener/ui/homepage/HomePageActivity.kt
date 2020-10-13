@@ -149,6 +149,11 @@ class HomePageActivity : AppCompatActivity() {
         val commentCount=result.commentCount
         val postAVList=result.postList
         val commentAVList=result.commentList
+        if(postCount==0&&commentCount==0){
+            home_no_data_text.visibility=View.VISIBLE
+            home_progressbar.visibility=View.GONE
+            return
+        }
         if(postCount!=0){
             viewModel.postList.addAll(postAVList)
             val postHeader=if(viewModel.isCurrentUser)

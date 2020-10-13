@@ -78,4 +78,6 @@
     <string name="toast_report_success">举报成功</string>
     <string name="toast_share_wechat">还未做这个功能</string>
     <string name="submit_text">正在提交…</string>
+    <string name="buried_message">您还未开通此功能</string>
+    <string name="home_no_data">该用户还未发表任何动态</string>
 </resources>

@@ -1,20 +1,37 @@
 package com.fsyy.listener.ui.main
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.FragmentTransaction
+import cn.leancloud.AVUser
 import com.fsyy.listener.R
+import com.fsyy.listener.rongcloud.network.HttpUtil
+import com.fsyy.listener.rongcloud.network.Network
+import com.fsyy.listener.rongcloud.network.TokenResponse
+import com.fsyy.listener.ui.MyApplication
 import com.fsyy.listener.utils.LogUtils
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import io.rong.imkit.RongIM
+import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttp
+import okhttp3.Response
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 class MainActivity : AppCompatActivity(),View.OnClickListener{
     private var encounterFragment: EncounterFragment?=null
     private var lonelyFragment: LonelyFragment?=null
     private var personalFragment: PersonalFragment?=null
     private val manager=supportFragmentManager
+    var token:String?=null
     companion object{
         const val WOOD=0
         const val LEAF=1
@@ -23,6 +40,7 @@ class MainActivity : AppCompatActivity(),View.OnClickListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        getToken()
         initListener()
         setTab(LEAF)
         test()
@@ -97,5 +115,17 @@ class MainActivity : AppCompatActivity(),View.OnClickListener{
             }
         }
         transaction.commit()
+    }
+    private fun getToken(){
+        val prefs=getSharedPreferences("token",Context.MODE_PRIVATE)
+        token= prefs.getString("token",null)
+        LogUtils.e("用户的token是$token")
+        if(token!=null){
+            Network.connectIM(token!!)
+            return
+        }
+        Network.getToken()
+
+
     }
 }

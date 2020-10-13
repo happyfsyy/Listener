@@ -108,7 +108,7 @@ class EncounterFragment : Fragment() {
         }
     }
     private fun initAdapter(){
-        adapter=EncounterAdapter(viewModel.postList)
+        adapter=EncounterAdapter(viewModel.postList,activity!!)
         adapter.setOnItemClickListener{ _, pos->
             val post=viewModel.postList[pos]
             activity?.startActivity<DetailActivity> {

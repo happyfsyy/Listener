@@ -24,7 +24,7 @@
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
             android:padding="@dimen/outer_padding"
-            android:src="@drawable/submit_selected" />
+            android:src="@drawable/submit_bg" />
         <EditText
             android:id="@+id/detail_edit"
             android:layout_width="0dp"

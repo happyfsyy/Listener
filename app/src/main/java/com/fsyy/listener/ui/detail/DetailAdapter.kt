@@ -10,6 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.bumptech.glide.request.RequestOptions
 import com.fsyy.listener.R
 import com.fsyy.listener.logic.model.Comment
 import com.fsyy.listener.logic.model.Post
@@ -56,9 +59,11 @@ class DetailAdapter(private val list:List<TreeHole>,private val context: Context
         LogUtils.e("BindViewHolder")
         when(holder){
             is PostViewHolder->{
-                //todo 加载用户头像
                 val post=list[position] as Post
                 holder.userName.text=post.userName
+                Glide.with(context).load(post.photoUrl)
+                    .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                    .into(holder.photo)
                 holder.content.text=post.content
                 if(post.tag==""){
                     holder.tag.visibility= View.GONE
@@ -78,7 +83,9 @@ class DetailAdapter(private val list:List<TreeHole>,private val context: Context
             is CommentViewHolder->{
                 val comment=list[position] as Comment
                 holder.userName.text=comment.userName
-                //todo photo
+                Glide.with(context).load(comment.photoUrl)
+                    .apply(RequestOptions.bitmapTransform(CircleCrop()))
+                    .into(holder.photo)
                 holder.likeCount.text=comment.likeCount.toString()
                 holder.content.text=comment.content
                 holder.date.text=comment.date.displayDate()
