@@ -23,3 +23,5 @@
 * 验证码：358379
 3. 安装包
 * 位于Listener/app/release下
+4. appId，appKey，appSecret
+* 包括融云的appkey以及Leanloud服务器的appkey，位于MyApplication.kt文件中，都已经被我注释。实际的字符串已经提交工作人员，也可随时联系我。
