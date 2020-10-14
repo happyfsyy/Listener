@@ -1,14 +1,17 @@
 <resources>
     <string name="app_name">Listener</string>
-    <string name="failure_text">当前网络状况不佳，请稍后再试</string>
+    <string name="failure_text">网络异常</string>
     <string name="splash_text1">找一个树洞，把秘密说进去</string>
     <string name="splash_text2">——《花样年华》</string>
     <string name="splash_text3">-听你说</string>
     <string name="login_number_prefix">+86</string>
-    <string name="login_number_hint">输入手机号</string>
+    <string name="login_number_hint">手机号</string>
     <string name="login_verified_text">验证码</string>
     <string name="login_verified_btn">获取验证码</string>
-    <string name="login">注册</string>
+    <string name="login_verified_sent">验证码已发送</string>
+    <string name="login_verified_error">验证码发送失败</string>
+    <string name="login_verified_resend">重新获取验证码</string>
+    <string name="login">登录</string>
     <string name="lonely">独白</string>
     <string name="encounter">遇见</string>
     <string name="personal">个人</string>
@@ -17,7 +20,7 @@
     <string name="lonely_open_hint">世界那么大，总有可以与你产生情感共鸣的人…</string>
     <string name="lonely_private_hint">总有一些话我们说不出口，即使对最亲近的人也无法诉说…</string>
     <string name="lonely_buried_hint">我只是个树洞，我不说话，但我会保存你说的话…</string>
-    <string name="lonely_submit_success">发布成功了，快去看看吧</string>
+    <string name="lonely_submit_success">发布成功了</string>
     <string name="lonely_tags">标签：</string>
     <string name="lonely_tag">如：工作烦恼</string>
     <string name="lonely_open">发布到广场：</string>
@@ -80,4 +83,10 @@
     <string name="submit_text">正在提交…</string>
     <string name="buried_message">您还未开通此功能</string>
     <string name="home_no_data">该用户还未发表任何动态</string>
+    <string name="phone_number_empty">手机号不可以为空</string>
+    <string name="phone_number_error">手机号格式错误</string>
+    <string name="sending">正在发送…</string>
+    <string name="logging">登录中…</string>
+    <string name="login_failure">登录失败</string>
+    <string name="private_no_data">您还未发表任何动态</string>
 </resources>

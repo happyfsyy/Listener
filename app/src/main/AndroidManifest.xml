@@ -19,11 +19,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".rongcloud.ui.ConversationAct"
+        <activity android:name=".ui.buried.BuriedActivity"></activity>
+        <activity
+            android:name=".rongcloud.ui.ConversationAct"
             android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.fsyy.listener"
                     android:pathPrefix="/conversation/"
@@ -35,7 +39,9 @@
             android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data
                     android:host="com.fsyy.listener"
                     android:pathPrefix="/conversationlist"

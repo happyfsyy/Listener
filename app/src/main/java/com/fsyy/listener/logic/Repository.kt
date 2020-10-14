@@ -123,7 +123,7 @@ object Repository {
             block()
         }catch (e:Exception){
 //            MyApplication.context.getString(R.string.failure_text).showToast()
-            ToastUtil.showCenterToast(R.drawable.tag_selected,MyApplication.context.getString(R.string.toast_network_exception))
+            ToastUtil.showCenterToast(R.drawable.warn,MyApplication.context.getString(R.string.toast_network_exception))
 
             LogUtils.e("Repository: ${e.printStackTrace()}")
             Result.failure<T>(e)

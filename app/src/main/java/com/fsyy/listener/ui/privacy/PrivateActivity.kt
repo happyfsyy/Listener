@@ -50,6 +50,9 @@ class PrivateActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()
                 viewPager2.visibility=View.VISIBLE
                 private_progressbar.visibility=View.GONE
+                if(viewModel.postList.size==0){
+                    private_no_data_text.visibility=View.VISIBLE
+                }
             }
         }
     }

@@ -15,6 +15,7 @@ class HomePageViewModel:ViewModel() {
     var isCurrentUser=false
     val innerParams by lazy { ArrayList<InnerCommentParams>()}
     lateinit var userId:String
+    lateinit var userName:String
 
     private val userIdLiveData=MutableLiveData<String>()
     fun getData(userId:String){

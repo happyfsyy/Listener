@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.Person
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.fsyy.listener.R
+import com.fsyy.listener.ui.buried.BuriedActivity
 import com.fsyy.listener.ui.homepage.HomePageActivity
 import com.fsyy.listener.ui.privacy.PrivateActivity
 import com.fsyy.listener.ui.settings.FeedbackActivity
@@ -58,7 +60,7 @@ class PersonalFragment:Fragment(),View.OnClickListener{
         personal_userName.text= AVUser.currentUser().username
         LogUtils.e("个人页中，用户名是：${AVUser.currentUser().username}")
         val intro= AVUser.currentUser().getString("intro")
-        if(intro=="")
+        if(TextUtils.isEmpty(intro))
             personal_user_intro.text=getString(R.string.profile_signature)
         else
             personal_user_intro.text=intro
@@ -98,13 +100,16 @@ class PersonalFragment:Fragment(),View.OnClickListener{
         RongIM.getInstance().startConversationList(activity,supportedConversation)
     }
     private fun buried(){
-        AlertDialog.Builder(activity).apply {
-            setMessage(R.string.buried_message)
-            setPositiveButton(R.string.dialog_confirm) { dialog, _ ->
-                dialog.dismiss()
+        if(!AVUser.currentUser().getBoolean("vip"))
+            AlertDialog.Builder(activity).apply {
+                setMessage(R.string.buried_message)
+                setPositiveButton(R.string.dialog_confirm) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                show()
             }
-            show()
-        }
+        else
+            activity?.startActivity<BuriedActivity>()
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

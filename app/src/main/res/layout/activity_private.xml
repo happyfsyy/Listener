@@ -25,4 +25,12 @@
         android:layout_height="wrap_content"
         style="@style/MyProgressBar"
         android:layout_centerInParent="true"/>
+    <TextView
+        android:id="@+id/private_no_data_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/private_no_data"
+        android:textSize="@dimen/commonTextSize"
+        android:visibility="gone"/>
 </RelativeLayout>

@@ -124,7 +124,7 @@ object Network {
         override fun onError(e: Throwable) {
             //todo 网络状况不佳，发布出现异常
 //            MyApplication.context.resources.getString(R.string.failure_text).showToast()
-            ToastUtil.showCenterToast(R.drawable.tag_selected,MyApplication.context.getString(R.string.failure_text))
+            ToastUtil.showCenterToast(R.drawable.failure,MyApplication.context.getString(R.string.failure_text))
             LogUtils.e("Network: ${e.stackTraceToString()}")
         }
         override fun onComplete() {
@@ -137,7 +137,7 @@ object Network {
             success(t)
         }
         override fun onError(e: Throwable) {
-            ToastUtil.showCenterToast(R.drawable.tag_selected,MyApplication.context.getString(R.string.failure_text))
+            ToastUtil.showCenterToast(R.drawable.failure,MyApplication.context.getString(R.string.failure_text))
             LogUtils.e("Network: ${e.stackTraceToString()}")
             failure(e)
         }

@@ -21,6 +21,8 @@ import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.extension.toComment
 import com.fsyy.listener.utils.extension.toPost
 import com.google.android.material.appbar.AppBarLayout
+import io.rong.imkit.RongIM
+import io.rong.imlib.model.Conversation
 import kotlinx.android.synthetic.main.activity_home_page.*
 import kotlinx.android.synthetic.main.home_header_data.*
 
@@ -57,7 +59,7 @@ class HomePageActivity : AppCompatActivity() {
             home_private_msg.visibility=View.VISIBLE
             home_private_msg.setOnClickListener {
                 //todo 跳转到私信界面
-
+                RongIM.getInstance().startConversation(this,Conversation.ConversationType.PRIVATE,viewModel.userId,viewModel.userName)
             }
         }
     }
@@ -139,6 +141,7 @@ class HomePageActivity : AppCompatActivity() {
             .apply(RequestOptions.bitmapTransform(CircleCrop()))
             .into(home_user_photo)
         home_user_name.text=user.username
+        viewModel.userName=user.username
         home_send_energy_text.text=user.getInt("sendEnergy").toString()
         home_get_energy_text.text=user.getInt("receiveEnergy").toString()
         home_get_like_text.text=user.getInt("receiveLikes").toString()
@@ -150,6 +153,9 @@ class HomePageActivity : AppCompatActivity() {
         val postAVList=result.postList
         val commentAVList=result.commentList
         if(postCount==0&&commentCount==0){
+            if(viewModel.isCurrentUser){
+                home_no_data_text.text=getString(R.string.private_no_data)
+            }
             home_no_data_text.visibility=View.VISIBLE
             home_progressbar.visibility=View.GONE
             return

@@ -22,10 +22,7 @@ import com.fsyy.listener.ui.main.PostViewHolder
 import com.fsyy.listener.ui.main.TreeHoleViewHolder
 import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.extension.displayDate
-import com.fsyy.listener.utils.listener.OnInnerCommentClickListener
-import com.fsyy.listener.utils.listener.OnInnerCommentLoadMoreListener
-import com.fsyy.listener.utils.listener.OnItemClickListener
-import com.fsyy.listener.utils.listener.OnLikeClickListener
+import com.fsyy.listener.utils.listener.*
 
 class DetailAdapter(private val list:List<TreeHole>,private val context: Context):RecyclerView.Adapter<TreeHoleViewHolder>() {
     override fun getItemViewType(position: Int): Int {
@@ -42,6 +39,9 @@ class DetailAdapter(private val list:List<TreeHole>,private val context: Context
             likeImg.setOnClickListener {
                 postLikeClickListener(it,adapterPosition)
             }
+            photo.setOnClickListener {
+                photoClickListener(it,adapterPosition)
+            }
         }
     }else{
         val view=LayoutInflater.from(parent.context).inflate(R.layout.comment_item,parent,false)
@@ -51,6 +51,9 @@ class DetailAdapter(private val list:List<TreeHole>,private val context: Context
             }
             likeImg.setOnClickListener {
                 commentLikeClickListener(it,adapterPosition)
+            }
+            photo.setOnClickListener {
+                photoClickListener(it,adapterPosition)
             }
         }
     }
@@ -120,6 +123,7 @@ class DetailAdapter(private val list:List<TreeHole>,private val context: Context
     private lateinit var postLikeClickListener:OnLikeClickListener
     private lateinit var commentLikeClickListener: OnLikeClickListener
     private lateinit var itemClickListener:OnItemClickListener
+    private lateinit var photoClickListener:OnPhotoClickListener
     fun setOnPostLikeClickListener(listener:OnLikeClickListener){
         this.postLikeClickListener=listener
     }
@@ -128,6 +132,9 @@ class DetailAdapter(private val list:List<TreeHole>,private val context: Context
     }
     fun setOnItemClickListener(listener:OnItemClickListener){
         this.itemClickListener=listener
+    }
+    fun setOnPhotoClickListener(listener:OnPhotoClickListener){
+        this.photoClickListener=listener
     }
 
     private lateinit var innerCommentClickListener:OnInnerCommentClickListener

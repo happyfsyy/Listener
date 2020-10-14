@@ -88,7 +88,7 @@ class LonelyFragment : Fragment(),View.OnClickListener{
         val content=lonely_content.text.toString().trim()
         val tag=lonely_tag.text.toString().trim()
         if(content==""){
-            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.edit_content_toast))
+            ToastUtil.showCenterToast(R.drawable.info,getString(R.string.edit_content_toast))
             return
         }
         viewModel.popupWindow=PopupUtil.showPopupWindow(viewModel.popupView,activity!!.window.decorView)
@@ -99,7 +99,7 @@ class LonelyFragment : Fragment(),View.OnClickListener{
             viewModel.popupWindow.dismiss()
             clearEditText()
             hideKeyboard()
-            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.lonely_submit_success)) }){
+            ToastUtil.showCenterToast(R.drawable.success,getString(R.string.lonely_submit_success)) }){
             viewModel.popupWindow.dismiss()
         }
     }

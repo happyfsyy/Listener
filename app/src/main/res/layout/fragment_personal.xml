@@ -35,7 +35,7 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="@dimen/outer_padding"
-                    android:src="@drawable/msg_selected"
+                    android:src="@drawable/msg_bg"
                     android:scaleType="centerCrop"/>
             </RelativeLayout>
         </RelativeLayout>

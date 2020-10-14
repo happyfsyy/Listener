@@ -80,7 +80,7 @@ class DetailViewModel:ViewModel() {
     fun publishComment(map:Map<String,Any?>,success: (avObject: AVObject) -> Unit)=Network.publishComment(map,success)
 
     val floorLiveData=MutableLiveData(0)
-    val innerFloorLiveData=MutableLiveData(0)
+    val innerFloorLiveData=MutableLiveData(-1)
     val toUserNameLiveData=MutableLiveData("")
 
     /**

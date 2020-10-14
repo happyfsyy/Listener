@@ -23,7 +23,7 @@ class EncounterAdapter(val list:List<Post>,val context:Context):RecyclerView.Ada
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val itemView=LayoutInflater.from(parent.context).inflate(R.layout.post_item,parent,false)
         val viewHolder=PostViewHolder(itemView)
-        viewHolder.content.maxLines=3
+        viewHolder.content.maxLines=4
         viewHolder.content.ellipsize=TextUtils.TruncateAt.END
         viewHolder.itemView.setOnClickListener {
             onItemClickListener(it,viewHolder.adapterPosition)

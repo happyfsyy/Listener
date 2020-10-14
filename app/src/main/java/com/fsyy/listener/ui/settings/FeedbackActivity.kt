@@ -74,7 +74,7 @@ class FeedbackActivity : AppCompatActivity(),View.OnClickListener{
                 }
                 clearUI()
                 viewModel.popupWindow.dismiss()
-                ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.toast_comment_success))
+                ToastUtil.showCenterToast(R.drawable.success,getString(R.string.toast_comment_success))
             }else{
                 viewModel.popupWindow.dismiss()
             }
@@ -83,6 +83,7 @@ class FeedbackActivity : AppCompatActivity(),View.OnClickListener{
     private fun clearUI(){
         feedback_edit.setText("")
         //todo 将图片设置为+图片
+        feedback_img1.setImageResource(R.drawable.add)
         feedback_img2.visibility=View.INVISIBLE
         feedback_img3.visibility=View.INVISIBLE
     }
@@ -102,7 +103,7 @@ class FeedbackActivity : AppCompatActivity(),View.OnClickListener{
     private fun submit(){
         val content=feedback_edit.text.toString().trim()
         if(content.isEmpty()) {
-            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.edit_content_toast))
+            ToastUtil.showCenterToast(R.drawable.info,getString(R.string.edit_content_toast))
         }else{
             viewModel.popupWindow=PopupUtil.showPopupWindow(viewModel.popupView,window.decorView,false)
             //todo 上传三张图片
@@ -123,7 +124,7 @@ class FeedbackActivity : AppCompatActivity(),View.OnClickListener{
             if(grantResults.isNotEmpty()&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
                 fromAlbum()
             }else{
-                ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.write_external_denied))
+                ToastUtil.showCenterToast(R.drawable.warn,getString(R.string.write_external_denied))
             }
         }
     }

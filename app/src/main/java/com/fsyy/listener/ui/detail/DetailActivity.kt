@@ -16,10 +16,12 @@ import com.fsyy.listener.logic.model.InnerComment
 import com.fsyy.listener.logic.model.Post
 import com.fsyy.listener.logic.model.TreeHole
 import com.fsyy.listener.ui.MyApplication
+import com.fsyy.listener.ui.homepage.HomePageActivity
 import com.fsyy.listener.utils.LogUtils
 import com.fsyy.listener.utils.PopupUtil
 import com.fsyy.listener.utils.SoftKeyboardUtils
 import com.fsyy.listener.utils.ToastUtil
+import com.fsyy.listener.utils.extension.startActivity
 import com.fsyy.listener.utils.extension.toComment
 import com.fsyy.listener.utils.extension.toInnerComment
 import kotlinx.android.synthetic.main.activity_detail.*
@@ -61,12 +63,12 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
         when(v?.id){
             viewModel.report.id-> {
                 viewModel.popupWindow.dismiss()
-                ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.toast_report_success))
+                ToastUtil.showCenterToast(R.drawable.success,getString(R.string.toast_report_success))
                 saveReport()
             }
             viewModel.share2WeChat.id-> {
                 viewModel.popupWindow.dismiss()
-                ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.toast_share_wechat))
+                ToastUtil.showCenterToast(R.drawable.failure,getString(R.string.toast_share_wechat))
             }
             viewModel.cancel.id-> viewModel.popupWindow.dismiss()
         }
@@ -156,7 +158,7 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
                    adapter.notifyDataSetChanged()
                    clearUI()
                    viewModel.popupWindow2?.dismiss()
-                   ToastUtil.showCenterToast(R.drawable.tag_selected, getString(R.string.toast_comment_success))
+                   ToastUtil.showCenterToast(R.drawable.success, getString(R.string.toast_comment_success))
                }
             }
         }
@@ -172,8 +174,9 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
                 val requestedInnerFloor=commentCount+1
                 val floor=viewModel.floorLiveData.value!!
                 val innerFloor=viewModel.innerFloorLiveData.value!!
+                LogUtils.e("我要测试！！！！！当前的innerFloor是$innerFloor")
                 val comment=viewModel.dataList[floor] as Comment
-                val toAuthor=if(innerFloor==0){
+                val toAuthor=if(innerFloor==-1){
                     AVObject.createWithoutData("_User",comment.userId)
                 }else{
                     AVObject.createWithoutData("_User",comment.innerCommentList[innerFloor].userId)
@@ -232,13 +235,17 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
             if(pos==0){
                 viewModel.toUserNameLiveData.value="楼主"
                 viewModel.floorLiveData.value=0
-                viewModel.innerFloorLiveData.value=0
+                viewModel.innerFloorLiveData.value=-1
             }else{
                 viewModel.floorLiveData.value=pos
-                viewModel.innerFloorLiveData.value=0
+                viewModel.innerFloorLiveData.value=-1
                 val comment=viewModel.dataList[pos] as Comment
                 viewModel.toUserNameLiveData.value=comment.userName
             }
+        }
+        adapter.setOnPhotoClickListener { _, pos ->
+            val userId=viewModel.dataList[pos].userId
+            startActivity<HomePageActivity> { putExtra("userId",userId) }
         }
         adapter.setOnInnerCommentClickListener { pos, index ->
             //todo 获取username，更改editText的hint，
@@ -329,7 +336,7 @@ class DetailActivity : AppCompatActivity(),View.OnClickListener {
                     viewModel.fetchNewComment(comment.objectId)
                 }
             }else{
-                ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.edit_content_toast))
+                ToastUtil.showCenterToast(R.drawable.info,getString(R.string.edit_content_toast))
             }
         }
     }

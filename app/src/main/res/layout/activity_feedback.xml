@@ -50,7 +50,8 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/inner_padding"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/add"/>
         <ImageView
             android:id="@+id/feedback_img2"
             android:layout_width="0dp"
@@ -60,7 +61,8 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/inner_padding"
             android:visibility="invisible"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/add"/>
         <ImageView
             android:id="@+id/feedback_img3"
             android:layout_width="0dp"
@@ -70,7 +72,8 @@
             android:layout_gravity="center_vertical"
             android:layout_margin="@dimen/inner_padding"
             android:visibility="invisible"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/add"/>
     </LinearLayout>
     <Button
         android:id="@+id/feedback_submit"

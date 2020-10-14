@@ -109,10 +109,10 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
     }
     private fun requestPermission(type: Int){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            !=PackageManager.PERMISSION_GRANTED){
+            !=PackageManager.PERMISSION_GRANTED||ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA)!=PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA),
                 type
             )
         }else{
@@ -156,13 +156,13 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(grantResults.isNotEmpty()&&grantResults[0]==PackageManager.PERMISSION_GRANTED){
+        if(grantResults.isNotEmpty()&&grantResults[0]==PackageManager.PERMISSION_GRANTED&&grantResults[1]==PackageManager.PERMISSION_GRANTED){
             when(requestCode){
                 TAKE_PHOTO -> takePhoto()
                 FROM_ALBUM -> fromAlbum()
             }
         }else{
-            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.write_external_denied))
+            ToastUtil.showCenterToast(R.drawable.warn,getString(R.string.write_external_denied))
         }
     }
 
@@ -171,6 +171,7 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
         when(requestCode){
             TAKE_PHOTO -> {
                 if (resultCode == RESULT_OK) {
+                    viewModel.popupWindow.dismiss()
                     viewModel.isModified=true
                     viewModel.popupWindow2=PopupUtil.showPopupWindow(viewModel.popupView2,window.decorView,false)
                     LogUtils.e("拍照图片的uri是${viewModel.imageUri}")
@@ -190,6 +191,7 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
             }
             FROM_ALBUM -> {
                 if (resultCode == RESULT_OK && data != null) {
+                    viewModel.popupWindow.dismiss()
                     viewModel.isModified=true
                     viewModel.popupWindow2=PopupUtil.showPopupWindow(viewModel.popupView2,window.decorView,false)
                     data.data?.let { it ->
@@ -246,9 +248,9 @@ class ProfileActivity : AppCompatActivity(),View.OnClickListener{
                 when (val contentText=contentEdit.text.toString().trim()) {
                     "" -> {
                         if (type == TYPE_USERNAME)
-                            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.profile_username_toast))
+                            ToastUtil.showCenterToast(R.drawable.info,getString(R.string.profile_username_toast))
                         else
-                            ToastUtil.showCenterToast(R.drawable.tag_selected,getString(R.string.profile_sign_toast))
+                            ToastUtil.showCenterToast(R.drawable.info,getString(R.string.profile_sign_toast))
                     }
                     content -> dialog.dismiss()
                     else -> {

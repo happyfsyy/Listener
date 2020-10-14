@@ -38,7 +38,7 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/photo_boy"
+            android:src="@drawable/photo"
             android:layout_toStartOf="@id/profile_photo_go"
             android:layout_marginEnd="@dimen/inner_padding"/>
     </RelativeLayout>
