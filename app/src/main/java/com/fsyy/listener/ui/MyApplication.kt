@@ -22,11 +22,14 @@ class MyApplication :Application(){
         lateinit var context:Context
         const val appkey1="k51hidwqkvqbb"
         const val appSecret1="lPoZqlncWZU"
+        const val appId="EujCJaz5mTgtmx1SrU1S31Yn-gzGzoHsz"
+        const val appKey="F5KDdcrdQw4dsBBLM7fSMbcj"
+        const val url="https://eujcjaz5.lc-cn-n1-shared.com"
     }
     override fun onCreate() {
         super.onCreate()
         context =applicationContext
-        AVOSCloud.initialize(this,"EujCJaz5mTgtmx1SrU1S31Yn-gzGzoHsz","F5KDdcrdQw4dsBBLM7fSMbcj","https://eujcjaz5.lc-cn-n1-shared.com")
-        RongIM.init(this,"k51hidwqkvqbb")
+        AVOSCloud.initialize(this, appId, appKey,url)
+        RongIM.init(this, appkey1)
     }
 }
